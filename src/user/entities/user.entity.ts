@@ -8,7 +8,7 @@ import {
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn({ name: 'id' })
-  id: string;
+  uuid: string;
 
   @Column({ name: 'provider', length: 50, nullable: false })
   provider: string;
@@ -16,7 +16,7 @@ export class User {
   @Column({ name: 'email', length: 100, nullable: false })
   email: string;
 
-  @Column({ name: 'nickname', length: 50, unique: true })
+  @Column({ name: 'nickname', length: 50, unique: true, default: 'temporary' }) // 어떻게 할지 고안
   nickname?: string;
 
   @Column({ name: 'profile_image', nullable: false, default: './img' })

@@ -11,9 +11,8 @@ import { User } from '../../user/entities/user.entity';
 @Entity('todos')
 export class Todos {
   @PrimaryGeneratedColumn({ name: 'id' })
-  uid: string;
+  uid: number;
 
-  // TODO: 어떻게 가져오면 좋을지
   // 실제 외래키 값
   @Column()
   user_id: string;
@@ -30,8 +29,11 @@ export class Todos {
   @Column({ name: 'title', length: 50, nullable: false })
   title: string;
 
-  @Column({ name: 'status', default: false })
+  @Column({ name: 'is_completed', default: false })
   status: boolean;
+
+  @Column({ name: 'user_color', nullable: true })
+  user_color: string;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
   created_at: Date;

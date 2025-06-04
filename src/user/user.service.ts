@@ -40,7 +40,7 @@ export class UserService {
     }
   }
 
-  async findUserById(id: string): Promise<Object> {
+  async findUserById(id: string): Promise<object> {
     try {
       const user = await this.userRepository.findOneBy({ uuid: id });
 

@@ -86,7 +86,7 @@ export class TodosService {
   }
 
   // 투두 내용 수정
-  async update(todoId: string, updateTodoDTO: UpdateTodoDTO) {
+  async update(todoId: number, updateTodoDTO: UpdateTodoDTO) {
     const todo = await this.todosRepository.findOne({
       where: { uid: Number(todoId) },
     });
@@ -114,21 +114,21 @@ export class TodosService {
   }
 
   // 투두 삭제
-  async delete(id: string) {
+  async delete(todo_id: number) {
     const todo = await this.todosRepository.findOne({
-      where: { uid: Number(id) },
+      where: { uid: todo_id },
     });
 
     if (!todo) {
       throw new NotFoundException('삭제할 투두가 존재하지 않습니다.');
     }
 
-    await this.todosRepository.delete(id);
+    await this.todosRepository.delete(todo_id);
 
     return {
       status: HttpStatus.OK,
       message: '투두가 성공적으로 삭제되었습니다.',
-      data: { id },
+      data: { todo_id },
     };
   }
 }

@@ -56,19 +56,19 @@ export class TodosController {
   @ApiResponse({ status: 200, description: 'Todo 수정 성공' })
   @ApiResponse({ status: 404, description: 'Todo를 찾을 수 없음' })
   async update(
-    @Param('todo_id') todo_id: string,
+    @Param('todo_id') todo_id: number,
     @Body() updateTodoDTO: UpdateTodoDTO,
   ) {
     return this.todosService.update(todo_id, updateTodoDTO);
   }
 
   // 투두 삭제
-  @Delete(':id')
+  @Delete(':todo_id')
   @ApiOperation({ summary: 'Todo 삭제', description: 'Todo를 삭제합니다.' })
   @ApiResponse({ status: 200, description: 'Todo 삭제 성공' })
   @ApiResponse({ status: 404, description: '삭제할 Todo가 존재하지 않습니다.' })
   // ParseUUIDPipe: UUID가 아닌 값이 들어오면 자동으로 예외 처리
-  async deleteTodo(@Param('id', ParseUUIDPipe) id: string) {
-    return this.todosService.delete(id);
+  async deleteTodo(@Param('id', ParseUUIDPipe) todo_id: number) {
+    return this.todosService.delete(todo_id);
   }
 }

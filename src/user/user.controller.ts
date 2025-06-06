@@ -1,22 +1,13 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBody, ApiResponse } from '@nestjs/swagger';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto } from '../auth/dto/create-user.dto';
 
 // TODO : 가드 추가
 @ApiTags('Users API')
 @Controller('api/users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-
-  @Post()
-  @ApiOperation({ summary: '사용자 추가', description: '사용자를 추가합니다.' })
-  @ApiBody({ type: CreateUserDto })
-  @ApiResponse({ status: 201, description: '유저 생성 성공' })
-  @ApiResponse({ status: 500, description: '유저 생성 실패' })
-  async create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
-  }
 
   @Get(':id')
   @ApiOperation({

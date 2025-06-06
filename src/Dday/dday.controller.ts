@@ -36,16 +36,16 @@ export class DdayController {
   }
 
   // D-Day 조회 테스트
-  @Get()
-  async get(@Query('user_id') user_id: string) {
-    return this.ddayService.get(user_id);
-  }
-
-  // D-Day 조회
-  // @Get('user/:user_id')
-  // async get(@Param('user_id') user_id: string) {
+  // @Get()
+  // async get(@Query('user_id') user_id: string) {
   //   return this.ddayService.get(user_id);
   // }
+
+  // D-Day 조회
+  @Get('user/:user_id')
+  async get(@Param('user_id') user_id: string) {
+    return this.ddayService.get(user_id);
+  }
 
   // D-Day 수정
   @Patch(':Dday_id')

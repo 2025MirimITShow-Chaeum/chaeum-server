@@ -17,9 +17,9 @@ export class Dday {
   user_id: string;
 
   // 연결된 User 객체
-  // @ManyToOne(() => User)
-  // @JoinColumn({ name: 'user_id' })
-  // user: User;
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'user_id' })
+  user: User;
 
   @Column({ name: 'title', nullable: false })
   title: string;

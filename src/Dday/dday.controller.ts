@@ -4,17 +4,18 @@ import {
   Body,
   Post,
   Get,
-  Put,
+  Patch,
   Delete,
   Param,
-  ParseUUIDPipe,
+  Query,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { DdayService } from './dday.service';
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreateDdayDTO } from './dto/create-dday.dto';
 import { UpdateDdayDTO } from './dto/update-dday.dto';
 
-@Controller('api/dday')
+@Controller('dday')
 export class DdayController {
   constructor(private ddayService: DdayService) {}
 
@@ -34,14 +35,20 @@ export class DdayController {
     }
   }
 
-  // D-Day 조회
-  @Get('user/:user_id')
-  async get(@Param('user_id') user_id: string) {
+  // D-Day 조회 테스트
+  @Get()
+  async get(@Query('user_id') user_id: string) {
     return this.ddayService.get(user_id);
   }
 
+  // D-Day 조회
+  // @Get('user/:user_id')
+  // async get(@Param('user_id') user_id: string) {
+  //   return this.ddayService.get(user_id);
+  // }
+
   // D-Day 수정
-  @Put(':Dday_id')
+  @Patch(':Dday_id')
   @ApiOperation({ summary: 'D-Day 수정', description: 'D-Day를 수정합니다.' })
   @ApiBody({ type: UpdateDdayDTO })
   @ApiResponse({ status: 200, description: 'D-Day 수정 성공' })
@@ -59,7 +66,7 @@ export class DdayController {
   @ApiResponse({ status: 200, description: 'D-Day 삭제 성공' })
   @ApiResponse({ status: 404, description: 'D-Day가 존재하지 않습니다.' })
   // ParseUUIDPipe: UUID가 아닌 값이 들어오면 자동으로 예외 처리
-  async deleteTodo(@Param('Dday_id', ParseUUIDPipe) Dday_id: number) {
+  async deleteTodo(@Param('Dday_id', ParseIntPipe) Dday_id: number) {
     return this.ddayService.delete(Dday_id);
   }
 }

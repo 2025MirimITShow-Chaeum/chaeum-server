@@ -19,7 +19,7 @@ export class UserService {
     return await this.userRepository.findOneBy({ email });
   }
 
-  async findUserById(uuid: string): Promise<User> {
-    return await this.userRepository.findOneBy({ uuid });
+  async findUserByUid(uid: string): Promise<User> {
+    return await this.userRepository.findOneBy({ uid });
   }
 }

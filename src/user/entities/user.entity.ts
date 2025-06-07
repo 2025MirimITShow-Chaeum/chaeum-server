@@ -2,8 +2,8 @@ import { Column, CreateDateColumn, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity('users')
 export class User {
-  @PrimaryColumn({ name: 'uuid', unique: true, nullable: false })
-  uuid: string;
+  @PrimaryColumn({ name: 'uid', unique: true, nullable: false })
+  uid: string;
 
   @Column({ name: 'provider', length: 50, nullable: false })
   provider: string;
@@ -11,7 +11,7 @@ export class User {
   @Column({ name: 'email', length: 100, nullable: false })
   email: string;
 
-  @Column({ name: 'nickname', length: 50, unique: true })
+  @Column({ name: 'nickname', length: 50, unique: true, nullable: true })
   nickname?: string;
 
   @Column({ name: 'profile_image', nullable: true, default: './img' })

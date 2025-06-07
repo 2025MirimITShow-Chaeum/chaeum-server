@@ -5,6 +5,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './user/user.module';
 import { typeORMConfig } from './ormconfig';
+import { FirebaseModule } from './firebase/firebase.module';
+import { AuthModule } from './auth/auth.module';
 import { DdayModule } from './dday/dday.module';
 
 @Module({
@@ -12,6 +14,8 @@ import { DdayModule } from './dday/dday.module';
     UsersModule,
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot(typeORMConfig),
+    FirebaseModule,
+    AuthModule,
     DdayModule,
   ],
   controllers: [AppController],

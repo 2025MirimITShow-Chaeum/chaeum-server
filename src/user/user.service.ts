@@ -24,7 +24,7 @@ export class UserService {
     return await this.userRepository.findOneBy({ uid });
   }
 
-  async update(uid: string, dto: UpdateUserInfoDto) {
+  async update(uid: string, dto: UpdateUserInfoDto): Promise<User> {
     const user = await this.findUserByUid(uid);
     if (!user) {
       throw new NotFoundException('User not found');
@@ -44,5 +44,13 @@ export class UserService {
       }
       throw new InternalServerErrorException('Failed to update user info');
     }
+  }
+
+  async deleteUserByUid(uid: string): Promise<void> {
+    const user = this.findUserByUid(uid);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    await this.userRepository.delete({ uid });
   }
 }

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -12,12 +13,16 @@ import { UserService } from './user.service';
 import { UserInfo } from '../auth/decorators/user-info.decorator';
 import { JwtAuthGuard } from 'src/config/jwt.config';
 import { UpdateUserInfoDto } from './dto/update-user.dto';
+import { FirebaseService } from 'src/firebase/firebase.service';
 
 @UseGuards(JwtAuthGuard)
 @ApiTags('Users API')
 @Controller('api/users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly firebaseService: FirebaseService,
+  ) {}
 
   @Get()
   @ApiOperation({
@@ -41,5 +46,18 @@ export class UserController {
   @ApiResponse({ status: 500, description: '수정 실패' })
   async register(@UserInfo('uid') uid: string, @Body() dto: UpdateUserInfoDto) {
     return this.userService.update(uid, dto);
+  }
+
+  @Delete()
+  @ApiOperation({
+    summary: '회원 탈퇴',
+    description: '회원을 완전히 삭제합니다',
+  })
+  @ApiResponse({ status: 200, description: '회원 탈퇴 성공' })
+  @ApiResponse({ status: 500, description: '회원 탈퇴 실패' })
+  async withdraw(@UserInfo('uid') uid: string) {
+    await this.userService.deleteUserByUid(uid);
+    await this.firebaseService.deleteUser(uid);
+    return { message: 'Successfully delete user' };
   }
 }

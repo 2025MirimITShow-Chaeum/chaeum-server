@@ -21,6 +21,7 @@ import { JwtAuthGuard } from 'src/config/jwt.config';
     UsersModule,
     FirebaseModule,
   ],
+  controllers: [AuthController],
   providers: [AuthService, JwtStrategy, JwtAuthGuard],
   exports: [JwtModule],
 })

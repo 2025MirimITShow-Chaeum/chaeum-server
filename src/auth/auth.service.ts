@@ -1,10 +1,16 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';
 import { FirebaseService } from 'src/firebase/firebase.service';
 import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
+import { RegisterDto } from './dto/register.dto';
 
 @Injectable()
 export class AuthService {
@@ -26,7 +32,6 @@ export class AuthService {
     const { uid, email } = decoded;
 
     let user = await this.userService.findUserByUid(uid);
-    console.log(user);
 
     if (!user) {
       user = await this.userRepository.create({
@@ -44,5 +49,27 @@ export class AuthService {
       accessToken,
       user,
     };
+  }
+
+  async register(uid: string, dto: RegisterDto) {
+    const user = await this.userService.findUserByUid(uid);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    try {
+      const updatedUser = {
+        ...user,
+        ...dto,
+      };
+      await this.userRepository.save(updatedUser);
+      return await this.userService.findUserByUid(uid);
+    } catch (err) {
+      console.log(err);
+      if (err instanceof NotFoundException) {
+        throw err;
+      }
+      throw new InternalServerErrorException('Failed to register');
+    }
   }
 }

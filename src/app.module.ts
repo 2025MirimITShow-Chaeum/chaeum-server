@@ -8,6 +8,10 @@ import { typeORMConfig } from './ormconfig';
 import { FirebaseModule } from './firebase/firebase.module';
 import { AuthModule } from './auth/auth.module';
 import { DdayModule } from './dday/dday.module';
+import { GroupsModule } from './groups/groups.module';
+import { ColorModule } from './color/color.module';
+import { ColorService } from './color/color.service';
+import { ColorController } from './color/color.controller';
 
 @Module({
   imports: [
@@ -17,8 +21,10 @@ import { DdayModule } from './dday/dday.module';
     FirebaseModule,
     AuthModule,
     DdayModule,
+    GroupsModule,
+    ColorModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, ColorController],
   providers: [AppService],
 })
 export class AppModule {}

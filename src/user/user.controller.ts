@@ -3,12 +3,16 @@ import {
   Controller,
   Delete,
   Get,
-  Param,
   Patch,
-  Post,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBody, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiBody,
+  ApiResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { UserInfo } from '../auth/decorators/user-info.decorator';
 import { JwtAuthGuard } from 'src/config/jwt.config';
@@ -17,6 +21,7 @@ import { FirebaseService } from 'src/firebase/firebase.service';
 
 @UseGuards(JwtAuthGuard)
 @ApiTags('Users API')
+@ApiBearerAuth()
 @Controller('api/users')
 export class UserController {
   constructor(

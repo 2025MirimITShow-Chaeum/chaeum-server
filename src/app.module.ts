@@ -14,7 +14,6 @@ import { ColorController } from './color/color.controller';
 import { SubjectTimerModule } from './subject-timers/subject-timer.module';
 import { TimerLogModule } from './timer-logs/timer-log.module';
 import { TimersModule } from './timers/timers.module';
-import { TimerLogController } from './timer-logs/timer-logs.controller';
 
 @Module({
   imports: [
@@ -30,7 +29,7 @@ import { TimerLogController } from './timer-logs/timer-logs.controller';
     SubjectTimerModule,
     TimerLogModule,
   ],
-  controllers: [AppController, ColorController, TimerLogController],
+  controllers: [AppController, ColorController],
   providers: [AppService],
 })
 export class AppModule {}

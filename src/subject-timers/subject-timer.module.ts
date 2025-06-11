@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { SubjectTimerController } from './subject-timer.controller';
 import { SubjectTimerService } from './subject-timer.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SubjectTimer } from './entities/subject-timer.entity';
@@ -14,7 +13,6 @@ import { TimerLogModule } from 'src/timer-logs/timer-log.module';
     GroupsModule,
     TimerLogModule,
   ],
-  controllers: [SubjectTimerController],
   providers: [SubjectTimerService],
   exports: [SubjectTimerService],
 })

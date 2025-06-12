@@ -1,6 +1,5 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import * as dotenv from 'dotenv';
-import { join } from 'path';
 
 dotenv.config();
 
@@ -11,6 +10,7 @@ export const typeORMConfig: TypeOrmModuleOptions = {
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  entities: [join(__dirname, '**', '*.entity.{ts,js}')],
+  entities: [__dirname + '/**/*.entity{.ts,.js}'],
   synchronize: true,
+  autoLoadEntities: true,
 };

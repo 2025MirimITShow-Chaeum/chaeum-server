@@ -1,5 +1,6 @@
 import { SubjectTimer } from 'src/subject-timers/entities/subject-timer.entity';
 import { TimerLog } from 'src/timer-logs/entities/timer-log.entity';
+import { Todo } from 'src/todo/entities/todo.entity';
 import {
   Entity,
   PrimaryColumn,
@@ -39,4 +40,7 @@ export class Groups {
 
   @OneToMany(() => TimerLog, (timer_log) => timer_log.group)
   timer_logs: TimerLog[];
+
+  @OneToMany(() => Todo, (todo) => todo.user)
+  todos: Todo[];
 }

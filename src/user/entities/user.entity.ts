@@ -1,6 +1,7 @@
 import { SubjectTimer } from 'src/subject-timers/entities/subject-timer.entity';
 import { TimerLog } from 'src/timer-logs/entities/timer-log.entity';
 import { Dday } from 'src/Dday/entities/dday.entity';
+import { Todo } from 'src/todo/entities/todo.entity';
 import {
   Column,
   CreateDateColumn,
@@ -43,4 +44,7 @@ export class User {
 
   @OneToMany(() => Dday, (dday) => dday.user)
   ddays: Dday[];
+
+  @OneToMany(() => Todo, (todo) => todo.user)
+  todos: Todo[];
 }

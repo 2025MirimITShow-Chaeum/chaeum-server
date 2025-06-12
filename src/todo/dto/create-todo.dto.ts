@@ -1,13 +1,13 @@
-import { IsUUID, IsNotEmpty, IsString, IsBoolean } from 'class-validator';
+import { IsNotEmpty, IsString, IsBoolean } from 'class-validator';
 
 export class CreateTodoDTO {
   // user 테이블에서 가져온 user_id
-  @IsUUID()
+  @IsString()
   @IsNotEmpty()
   user_id: string;
 
   // group 테이블에서 가져온 group_id
-  @IsUUID()
+  @IsString()
   @IsNotEmpty()
   group_id: string;
 
@@ -19,5 +19,5 @@ export class CreateTodoDTO {
   // 투두 상태
   @IsBoolean()
   @IsNotEmpty()
-  status: boolean;
+  is_completed: boolean;
 }

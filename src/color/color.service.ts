@@ -25,7 +25,6 @@ export class ColorService {
       { colorCode: '#65D4B5', type: ColorType.GROUP },
       { colorCode: '#F99EEF', type: ColorType.GROUP },
       { colorCode: '#6093E4', type: ColorType.GROUP },
-      // {colorCode: '#F1F1F1', type: ColorType.MEMBER}, //기본 하얀색
       { colorCode: '#5399F5', type: ColorType.MEMBER },
       { colorCode: '#F57353', type: ColorType.MEMBER },
       { colorCode: '#CF60FF', type: ColorType.MEMBER },

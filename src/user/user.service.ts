@@ -6,8 +6,8 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
-import { Not, Repository } from 'typeorm';
-import { CreateUserDto } from './dto/create-user.dto';
+import { Repository } from 'typeorm';
+import { UpdateUserInfoDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
@@ -20,44 +20,37 @@ export class UserService {
     return await this.userRepository.findOneBy({ email });
   }
 
-  // 유저 임시 생성 (소셜 로그인 기능 추가 예정)
-  async create(createUserDto: CreateUserDto) {
-    try {
-      const user = {
-        ...createUserDto,
-      };
-
-      await this.userRepository.save(user);
-
-      return {
-        status: HttpStatus.CREATED,
-        message: 'User created successfully',
-        data: user,
-      };
-    } catch (err) {
-      console.log(err);
-      throw new InternalServerErrorException('Failed to create user');
-    }
+  async findUserByUid(uid: string): Promise<User> {
+    return await this.userRepository.findOneBy({ uid });
   }
 
-  async findUserById(id: string): Promise<object> {
-    try {
-      const user = await this.userRepository.findOneBy({ uuid: id });
+  async update(uid: string, dto: UpdateUserInfoDto): Promise<User> {
+    const user = await this.findUserByUid(uid);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
 
-      if (!user) {
-        throw new NotFoundException('User not found');
-      }
-      return {
-        status: HttpStatus.OK,
-        message: 'User retrieved successfully',
-        data: user,
+    try {
+      const updatedUser = {
+        ...user,
+        ...dto,
       };
+      await this.userRepository.save(updatedUser);
+      return await this.findUserByUid(uid);
     } catch (err) {
       console.log(err);
       if (err instanceof NotFoundException) {
         throw err;
       }
-      throw new InternalServerErrorException('Failed to retrieve user');
+      throw new InternalServerErrorException('Failed to update user info');
     }
+  }
+
+  async deleteUserByUid(uid: string): Promise<void> {
+    const user = this.findUserByUid(uid);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    await this.userRepository.delete({ uid });
   }
 }

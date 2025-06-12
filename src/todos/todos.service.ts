@@ -1,3 +1,7 @@
+import { UpdateTodoDTO } from './dto/update_todo.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, In } from 'typeorm';
+import { GroupMembers } from '../groups/entities/group-members.entity';
 import {
   HttpStatus,
   Injectable,
@@ -6,9 +10,6 @@ import {
 } from '@nestjs/common';
 import { Todos } from './entities/todos.entity';
 import { CreateTodoDTO } from './dto/create-todo.dto';
-import { UpdateTodoDTO } from './dto/update_todo.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, In } from 'typeorm';
 
 @Injectable()
 export class TodosService {

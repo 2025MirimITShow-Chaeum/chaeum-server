@@ -1,4 +1,12 @@
-import { Column, CreateDateColumn, Entity, PrimaryColumn } from 'typeorm';
+import { SubjectTimer } from 'src/subject-timers/entities/subject-timer.entity';
+import { TimerLog } from 'src/timer-logs/entities/timer-log.entity';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryColumn,
+} from 'typeorm';
 
 @Entity('users')
 export class User {
@@ -25,4 +33,10 @@ export class User {
 
   @CreateDateColumn({ name: 'created_at' })
   created_at: Date;
+
+  @OneToMany(() => SubjectTimer, (subjectTimer) => subjectTimer.user)
+  subject_timers: SubjectTimer[];
+
+  @OneToMany(() => TimerLog, (timer_log) => timer_log.user)
+  timer_logs: TimerLog[];
 }

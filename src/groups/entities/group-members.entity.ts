@@ -12,9 +12,9 @@ export class GroupMembers {
   @PrimaryColumn()
   member_id: string;
 
-  // @ManyToOne(() => User)
-  // @JoinColumn({ name: 'user_id' })
-  // user: User;
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'user_id' })
+  user: User;
 
   @Column()
   user_id: string;

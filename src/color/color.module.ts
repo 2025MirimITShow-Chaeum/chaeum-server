@@ -6,6 +6,6 @@ import { ColorService } from './color.service';
 @Module({
   imports: [TypeOrmModule.forFeature([Color])],
   providers: [ColorService],
-  exports: [ColorService],
+  exports: [TypeOrmModule, ColorService],
 })
 export class ColorModule {}

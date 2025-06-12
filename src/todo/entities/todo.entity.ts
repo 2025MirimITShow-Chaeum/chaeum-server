@@ -5,16 +5,19 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   JoinColumn,
+  Index,
 } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
+import { Groups } from '../../groups/entities/group.entity';
 
 @Entity('todos')
-export class Todos {
+export class Todo {
   @PrimaryGeneratedColumn({ name: 'id' })
   uid: number;
 
   // 실제 외래키 값
   @Column()
+  @Index()
   user_id: string;
 
   // 연결된 User 객체
@@ -22,15 +25,19 @@ export class Todos {
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  // TODO: FK - group_id
-  @Column({ name: 'group_id', length: 50, nullable: false })
+  @Column()
+  @Index()
   group_id: string;
+
+  @ManyToOne(() => Groups)
+  @JoinColumn({ name: 'group_id' })
+  group: Groups;
 
   @Column({ name: 'title', length: 50, nullable: false })
   title: string;
 
   @Column({ name: 'is_completed', default: false })
-  status: boolean;
+  is_completed: boolean;
 
   @Column({ name: 'user_color', nullable: true })
   user_color: string;
@@ -38,6 +45,6 @@ export class Todos {
   @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
   created_at: Date;
 
-  @Column({ name: 'end_at', type: 'timestamp' })
-  end_at: Date;
+  @Column({ name: 'finished_at', type: 'timestamp', nullable: true })
+  finished_at: Date;
 }

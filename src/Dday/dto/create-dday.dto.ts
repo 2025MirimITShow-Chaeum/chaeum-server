@@ -1,14 +1,9 @@
-import {
-  IsBoolean,
-  IsDate,
-  IsNotEmpty,
-  IsString,
-  IsUUID,
-} from 'class-validator';
+import { IsBoolean, IsDate, IsNotEmpty, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class CreateDdayDTO {
   // user 테이블에서 가져온 user_id
-  @IsUUID()
+  @IsString()
   @IsNotEmpty()
   user_id: string;
 
@@ -23,6 +18,7 @@ export class CreateDdayDTO {
   is_main: boolean;
 
   // D-day 날짜
+  @Type(() => Date)
   @IsDate()
   @IsNotEmpty()
   end_at: Date;

@@ -1,4 +1,5 @@
 import { IsBoolean, IsOptional, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class UpdateTodoDTO {
   @IsOptional()
@@ -6,6 +7,7 @@ export class UpdateTodoDTO {
   title?: string;
 
   @IsOptional()
+  @Type(() => Boolean)
   @IsBoolean()
-  status?: boolean;
+  is_completed?: boolean;
 }

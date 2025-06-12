@@ -1,5 +1,6 @@
 import { SubjectTimer } from 'src/subject-timers/entities/subject-timer.entity';
 import { TimerLog } from 'src/timer-logs/entities/timer-log.entity';
+import { Dday } from 'src/Dday/entities/dday.entity';
 import {
   Column,
   CreateDateColumn,
@@ -39,4 +40,7 @@ export class User {
 
   @OneToMany(() => TimerLog, (timer_log) => timer_log.user)
   timer_logs: TimerLog[];
+
+  @OneToMany(() => Dday, (dday) => dday.user)
+  ddays: Dday[];
 }

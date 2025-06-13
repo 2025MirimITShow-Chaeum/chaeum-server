@@ -1,4 +1,3 @@
-// groups.service.ts
 import { Injectable } from '@nestjs/common';
 import { GroupCreateService } from './services/group-create.service';
 import { GroupQueryService } from './services/group-query.service';

@@ -12,10 +12,11 @@ import { GroupJoinService } from './services/group-join.service';
 import { GroupUpdateService } from './services/group-update.service';
 import { ColorService } from 'src/color/color.service';
 import { GroupLeaveService } from './services/group-leave.service';
+import { AttendanceRecords } from './entities/attendance_records.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Groups, GroupMembers, User]),
+    TypeOrmModule.forFeature([Groups, GroupMembers, User, AttendanceRecords]),
     ColorModule,
   ],
   providers: [
@@ -25,6 +26,7 @@ import { GroupLeaveService } from './services/group-leave.service';
     GroupUpdateService,
     GroupQueryService,
     GroupLeaveService,
+    GroupQueryService,
     ColorService,
   ],
   controllers: [GroupsController],

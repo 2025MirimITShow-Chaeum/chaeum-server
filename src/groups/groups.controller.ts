@@ -13,10 +13,14 @@ import { CreateGroupDto } from './dto/create-group.dto';
 import { JoinGroupDto } from './dto/join-group.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { GroupQueryService } from './services/group-query.service';
 
 @Controller('api/group')
 export class GroupsController {
-  constructor(private readonly groupService: GroupsService) {}
+  constructor(
+    private readonly groupService: GroupsService,
+    private readonly groupQueryService: GroupQueryService,
+  ) {}
 
   @Post()
   @ApiOperation({
@@ -97,5 +101,13 @@ export class GroupsController {
     @Query('user_id') user_id: string,
   ) {
     return this.groupService.leaveGroup(group_id, user_id);
+  }
+
+  @Get(':group_id/member/:user_id')
+  async getGroupMemberDetail(
+    @Param('group_id') groupId: string,
+    @Param('user_id') userId: string,
+  ) {
+    return this.groupQueryService.getGroupMemberDetail(groupId, userId);
   }
 }

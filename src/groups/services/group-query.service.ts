@@ -4,6 +4,8 @@ import { GroupMembers } from '../entities/group-members.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Groups } from '../entities/group.entity';
 import { Injectable } from '@nestjs/common';
+import { GroupMemberDetailDto } from '../dto/group-member-detail.dto';
+import { AttendanceRecords } from '../entities/attendance_records.entity';
 
 @Injectable()
 export class GroupQueryService {
@@ -13,6 +15,9 @@ export class GroupQueryService {
 
     @InjectRepository(Groups)
     private groupRepository?: Repository<Groups>,
+
+    @InjectRepository(AttendanceRecords)
+    private attendanceRepository?: Repository<AttendanceRecords>,
   ) {}
 
   // 사용자 ID로 속한 그룹 목록 조회
@@ -60,8 +65,39 @@ export class GroupQueryService {
       group_id: group.group_id,
       name: group.name,
       color: group.color,
+      subject: group.subject,
       member_count: members.length,
       members: memberList,
+    };
+  }
+
+  async getGroupMemberDetail(
+    group_id: string,
+    user_id: string,
+  ): Promise<GroupMemberDetailDto> {
+    const member = await this.groupMembersRepository.findOne({
+      where: { group_id, user_id },
+      relations: ['user'],
+    });
+
+    if (!member) throw new NotFoundException('스터디원을 찾을 수 없습니다.');
+
+    // 출석일 수 계산
+    const attendedCount = await this.attendanceRepository.count({
+      where: {
+        group_id,
+        user_id,
+        attended: true,
+      },
+    });
+
+    return {
+      uid: member.user.uid,
+      nickname: member.user.nickname ?? '이름 없음',
+      profileImage: member.user.profile_image ?? '',
+      slogan: member.user.slogan ?? '',
+      color: member.color ?? '',
+      attendedCount,
     };
   }
 }

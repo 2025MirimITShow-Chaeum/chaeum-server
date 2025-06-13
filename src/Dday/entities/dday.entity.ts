@@ -4,6 +4,7 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   JoinColumn,
+  CreateDateColumn,
 } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
 
@@ -29,4 +30,7 @@ export class Dday {
 
   @Column({ name: 'end_at', type: 'timestamp' })
   end_at: Date;
+
+  @CreateDateColumn({ name: 'created_at' })
+  created_at: Date;
 }

@@ -7,15 +7,16 @@ import {
   Injectable,
   InternalServerErrorException,
   NotFoundException,
+  ForbiddenException,
 } from '@nestjs/common';
-import { Todos } from './entities/todos.entity';
+import { Todo } from 'src/todo/entities/todo.entity';
 import { CreateTodoDTO } from './dto/create-todo.dto';
 
 @Injectable()
 export class TodosService {
   constructor(
-    @InjectRepository(Todos)
-    private todosRepository: Repository<Todos>,
+    @InjectRepository(Todo)
+    private todosRepository: Repository<Todo>,
 
     @InjectRepository(GroupMembers)
     private groupMembersRepository: Repository<GroupMembers>,
@@ -23,11 +24,18 @@ export class TodosService {
 
   // 투두 생성
   async create(createTodoDTO: CreateTodoDTO) {
-    try {
-      const todo = {
-        ...createTodoDTO,
-      };
+    const { user_id, group_id } = createTodoDTO;
 
+    // 그룹 멤버 검증
+    const membership = await this.groupMembersRepository.findOne({
+      where: { group_id, member_id: user_id },
+    });
+    if (!membership) {
+      throw new ForbiddenException('해당 그룹의 멤버가 아닙니다.');
+    }
+
+    try {
+      const todo = this.todosRepository.create(createTodoDTO);
       await this.todosRepository.save(todo);
 
       return {
@@ -52,15 +60,20 @@ export class TodosService {
 
     const memberIds = members.map((member) => member.member_id);
 
+    // 그룹에 멤버가 없으면 빈 배열 반환
+    if (memberIds.length === 0) {
+      return {
+        status: HttpStatus.OK,
+        message: '그룹 멤버들의 투두를 성공적으로 조회했습니다.',
+        data: [],
+      };
+    }
+
     // 2. 멤버들이 만든 투두들 조회
     const todos = await this.todosRepository.find({
-      where: {
-        user_id: In(memberIds), // IN 절
-        group_id,
-      },
-      order: {
-        created_at: 'DESC',
-      },
+      where: { user_id: In(memberIds), group_id },
+      order: { created_at: 'DESC' },
+      relations: ['user', 'group'],
     });
 
     return {
@@ -80,7 +93,7 @@ export class TodosService {
     });
 
     return {
-      status: 200,
+      status: HttpStatus.OK,
       message: '해당 유저의 투두를 성공적으로 조회했습니다.',
       data: todos,
     };
@@ -101,8 +114,9 @@ export class TodosService {
       todo.title = updateTodoDTO.title;
     }
 
-    if (updateTodoDTO.status !== undefined) {
-      todo.status = updateTodoDTO.status;
+    if (updateTodoDTO.is_completed !== undefined) {
+      todo.is_completed = updateTodoDTO.is_completed;
+      todo.finished_at = updateTodoDTO.is_completed ? new Date() : null;
     }
 
     await this.todosRepository.save(todo);

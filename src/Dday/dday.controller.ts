@@ -1,13 +1,11 @@
 import {
   Controller,
-  InternalServerErrorException,
   Body,
   Post,
   Get,
   Patch,
   Delete,
   Param,
-  Query,
   ParseIntPipe,
 } from '@nestjs/common';
 import { DdayService } from './dday.service';
@@ -26,13 +24,7 @@ export class DdayController {
   @ApiResponse({ status: 201, description: 'D-Day 생성 성공' })
   @ApiResponse({ status: 500, description: 'D-Day 생성 실패' })
   async create(@Body() dto: CreateDdayDTO) {
-    try {
-      const result = await this.ddayService.create(dto);
-      return { message: 'D-Day 생성 성공', data: result };
-    } catch (err) {
-      console.error(err);
-      throw new InternalServerErrorException('D-Day 생성 중 에러 발생');
-    }
+    return this.ddayService.create(dto);
   }
 
   // D-Day 조회 테스트
@@ -43,6 +35,8 @@ export class DdayController {
 
   // D-Day 조회
   @Get('user/:user_id')
+  @ApiOperation({ summary: '유저별 D-Day 조회' })
+  @ApiResponse({ status: 200, description: '성공' })
   async get(@Param('user_id') user_id: string) {
     return this.ddayService.get(user_id);
   }
@@ -53,8 +47,9 @@ export class DdayController {
   @ApiBody({ type: UpdateDdayDTO })
   @ApiResponse({ status: 200, description: 'D-Day 수정 성공' })
   @ApiResponse({ status: 404, description: 'D-Day 찾을 수 없음' })
+  // ParseIntPipe: 숫자자가 아닌 값이 들어오면 자동으로 예외 처리
   async update(
-    @Param('Dday_id') Dday_id: number,
+    @Param('Dday_id', ParseIntPipe) Dday_id: number,
     @Body() updateDdayDTO: UpdateDdayDTO,
   ) {
     return this.ddayService.update(Dday_id, updateDdayDTO);
@@ -65,8 +60,8 @@ export class DdayController {
   @ApiOperation({ summary: 'D-Day 삭제', description: 'D-Day를 삭제합니다.' })
   @ApiResponse({ status: 200, description: 'D-Day 삭제 성공' })
   @ApiResponse({ status: 404, description: 'D-Day가 존재하지 않습니다.' })
-  // ParseUUIDPipe: UUID가 아닌 값이 들어오면 자동으로 예외 처리
-  async deleteTodo(@Param('Dday_id', ParseIntPipe) Dday_id: number) {
+  // ParseIntPipe: 숫자자가 아닌 값이 들어오면 자동으로 예외 처리
+  async delete(@Param('Dday_id', ParseIntPipe) Dday_id: number) {
     return this.ddayService.delete(Dday_id);
   }
 }

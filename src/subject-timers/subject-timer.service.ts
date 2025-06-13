@@ -33,7 +33,8 @@ export class SubjectTimerService {
 
     const user = await this.userService.findUserByUid(user_id);
     const group = await this.groupService.getGroup(group_id);
-    const subject = group.data.subject;
+    // const subject = group.data.subject;
+    const subject = group.subject;
 
     let existing = await this.subjectTimerRepo.findOne({
       where: { user_id, subject, date },
@@ -60,7 +61,7 @@ export class SubjectTimerService {
     const newRecord = this.subjectTimerRepo.create({
       user,
       user_id,
-      group: group.data,
+      group: group, // grou.data에서 바꿈
       subject,
       date,
       started_at: now,
@@ -74,7 +75,8 @@ export class SubjectTimerService {
     const date = getAdjustedDate(now);
 
     const group = await this.groupService.getGroup(group_id);
-    const subject = group.data.subject;
+    // const subject = group.data.subject;
+    const subject = group.subject;
 
     const existing = await this.subjectTimerRepo.findOne({
       where: { user_id, subject, date },

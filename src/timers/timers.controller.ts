@@ -45,12 +45,12 @@ export class TimersController {
   @ApiResponse({ status: 200, description: '타이머 상태 정보 반환' })
   async getSubjectTimerStatus(
     @UserInfo('uid') uid: string,
-    @Query('subject') subject: string,
+    @Query('group_id') group_id: string,
     @Query('date') date: string,
   ) {
     const timerStatus = await this.subjectTimerService.getTimerStatus(
       uid,
-      subject,
+      group_id,
       date,
     );
 

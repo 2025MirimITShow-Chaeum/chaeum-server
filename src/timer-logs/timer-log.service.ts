@@ -23,12 +23,13 @@ export class TimerLogService {
   ) {
     const user = await this.userService.findUserByUid(user_id);
     const group = await this.groupServie.getGroup(group_id);
-    const subject = group.data.subject;
+    // const subject = group.data.subject;
+    const subject = group.subject;
 
     const log = this.timerLogRepo.create({
       user,
       user_id,
-      group: group.data,
+      group: group,
       subject,
       date: dto.timestamp.toISOString().slice(0, 10),
       action: dto.action,

@@ -17,8 +17,8 @@ export class Groups {
   @Column({ length: 100 })
   name: string;
 
-  // @Column({ length: 500 })
-  // subject: string;
+  @Column({ length: 500, nullable: true })
+  subject: string;
 
   @Column()
   color: string;

@@ -19,12 +19,40 @@ export class SubjectTimerService {
 
   async getTimerStatus(
     user_id: string,
-    subject: string,
+    group_id: string,
     date: string,
   ): Promise<SubjectTimer | null> {
     return this.subjectTimerRepo.findOne({
-      where: { user_id, subject, date },
+      where: { user_id, group_id, date },
     });
+  }
+
+  async getTimerAccumulatedTime(
+    user_id: string,
+    group_id: string,
+  ): Promise<number> {
+    const group = await this.groupService.getGroup(group_id);
+    const date = getAdjustedDate(new Date());
+
+    const timer = await this.subjectTimerRepo.findOne({
+      where: { user_id, group_id, date },
+    });
+
+    return timer?.accumulated_sec ?? 0;
+  }
+
+  async getTimersByGroupAndUser(
+    user_id: string,
+    group_id: string,
+  ): Promise<SubjectTimer[]> {
+    return await this.subjectTimerRepo.find({
+      where: { user_id, group_id },
+      order: { date: 'DESC' },
+    });
+  }
+
+  async getAllTimers(user_id: string): Promise<SubjectTimer[]> {
+    return await this.subjectTimerRepo.find({ where: { user_id } });
   }
 
   async startTimer(user_id: string, group_id: string): Promise<SubjectTimer> {
@@ -33,11 +61,10 @@ export class SubjectTimerService {
 
     const user = await this.userService.findUserByUid(user_id);
     const group = await this.groupService.getGroup(group_id);
-    // const subject = group.data.subject;
     const subject = group.subject;
 
     let existing = await this.subjectTimerRepo.findOne({
-      where: { user_id, subject, date },
+      where: { user_id, group_id, date },
     });
 
     if (existing) {
@@ -62,6 +89,7 @@ export class SubjectTimerService {
       user,
       user_id,
       group: group, // grou.data에서 바꿈
+      group_id: group.group_id,
       subject,
       date,
       started_at: now,
@@ -75,11 +103,10 @@ export class SubjectTimerService {
     const date = getAdjustedDate(now);
 
     const group = await this.groupService.getGroup(group_id);
-    // const subject = group.data.subject;
     const subject = group.subject;
 
     const existing = await this.subjectTimerRepo.findOne({
-      where: { user_id, subject, date },
+      where: { user_id, group_id, date },
     });
 
     if (!existing || !existing.is_running || !existing.started_at) {

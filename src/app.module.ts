@@ -15,6 +15,7 @@ import { SubjectTimerModule } from './subject-timers/subject-timer.module';
 import { TimerLogModule } from './timer-logs/timer-log.module';
 import { TimersModule } from './timers/timers.module';
 import { TodoModule } from './todo/todo.module';
+import { HomeModule } from './home/home.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { TodoModule } from './todo/todo.module';
     SubjectTimerModule,
     TimerLogModule,
     TodoModule,
+    HomeModule,
   ],
   controllers: [AppController, ColorController],
   providers: [AppService],

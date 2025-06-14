@@ -29,6 +29,11 @@ export class GroupsController {
     return this.groupAttendanceService.getGroupRanking();
   }
 
+  @Get('/ranking/user')
+  async getUserGroupRanking(@Query('user_id') user_id: string) {
+    return this.groupAttendanceService.getUserGroupRanking(user_id);
+  }
+
   @Post()
   @ApiOperation({
     summary: '그룹 생성',

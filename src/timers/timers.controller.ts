@@ -57,7 +57,7 @@ export class TimersController {
     return timerStatus ?? { message: '해당 날짜에 타이머 정보가 없습니다.' };
   }
 
-  @Get('logs')
+  @Get('logs/:group_id')
   @ApiOperation({
     summary: '타이머 로그 조회',
     description: '특정 날짜와 과목에 대한 타이머 로그를 조회합니다.',
@@ -72,10 +72,10 @@ export class TimersController {
   @ApiResponse({ status: 200, description: '타이머 로그 목록 반환' })
   async getTimerLogs(
     @UserInfo('uid') uid: string,
-    @Query('subject') subject: string,
+    @Param('group_id') group_id: string,
     @Query('date') date: string,
   ) {
-    return this.timerLogService.getTimerLogs(uid, subject, date);
+    return this.timerLogService.getTimerLogs(uid, group_id, date);
   }
 
   @Post(':group_id/start')

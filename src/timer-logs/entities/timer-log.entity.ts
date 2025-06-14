@@ -24,6 +24,9 @@ export class TimerLog {
   group: Groups;
 
   @Column()
+  group_id: string;
+
+  @Column({ nullable: true })
   subject: string;
 
   @Column({ length: 10 })

@@ -8,5 +8,9 @@ export class UpdateGroupDto {
 
   @IsOptional()
   @IsString()
+  subject: string;
+
+  @IsOptional()
+  @IsString()
   color?: string;
 }

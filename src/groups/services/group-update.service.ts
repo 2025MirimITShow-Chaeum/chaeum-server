@@ -32,6 +32,9 @@ export class GroupUpdateService {
     if (dto.color !== undefined && dto.color.trim() !== '') {
       group.color = dto.color;
     }
+    if (dto.subject !== undefined && dto.subject.trim() !== '') {
+      group.subject = dto.subject;
+    }
 
     await this.groupRepository.save(group);
 
@@ -47,6 +50,7 @@ export class GroupUpdateService {
         group_id: group.group_id,
         name: group.name ?? '이름 없음',
         color: group.color,
+        subject: group.subject,
         attendance_count: group.attendance_count,
         member_count: group.member_counts,
         secret_code: group.secret_code,

@@ -13,10 +13,20 @@ import { GroupUpdateService } from './services/group-update.service';
 import { ColorService } from 'src/color/color.service';
 import { GroupLeaveService } from './services/group-leave.service';
 import { AttendanceRecords } from './entities/attendance_records.entity';
+import { GroupAttendanceService } from './services/group-attendance.service';
+import { Todo } from 'src/todo/entities/todo.entity';
+import { GroupAttendanceLog } from './entities/group_attendance_log.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Groups, GroupMembers, User, AttendanceRecords]),
+    TypeOrmModule.forFeature([
+      Groups,
+      GroupMembers,
+      User,
+      AttendanceRecords,
+      Todo,
+      GroupAttendanceLog,
+    ]),
     ColorModule,
   ],
   providers: [
@@ -27,6 +37,7 @@ import { AttendanceRecords } from './entities/attendance_records.entity';
     GroupQueryService,
     GroupLeaveService,
     GroupQueryService,
+    GroupAttendanceService,
     ColorService,
   ],
   controllers: [GroupsController],

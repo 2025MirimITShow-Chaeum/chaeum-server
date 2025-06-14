@@ -26,6 +26,9 @@ export class SubjectTimer {
   group: Groups;
 
   @Column()
+  group_id: string;
+
+  @Column({ nullable: true })
   subject: string; // group의 subject
 
   @Column({ type: 'date' })

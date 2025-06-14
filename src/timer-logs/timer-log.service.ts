@@ -23,13 +23,13 @@ export class TimerLogService {
   ) {
     const user = await this.userService.findUserByUid(user_id);
     const group = await this.groupServie.getGroup(group_id);
-    // const subject = group.data.subject;
     const subject = group.subject;
 
     const log = this.timerLogRepo.create({
       user,
       user_id,
       group: group,
+      group_id: group.group_id,
       subject,
       date: dto.timestamp.toISOString().slice(0, 10),
       action: dto.action,
@@ -41,12 +41,12 @@ export class TimerLogService {
 
   async getTimerLogs(
     user_id: string,
-    subject: string,
+    group_id: string,
     date: string,
   ): Promise<TimerLog[]> {
-    const cleanedSubject = subject.replace(/[\x00-\x1F\x7F]/g, '').trim();
+    // const cleanedSubject = subject.replace(/[\x00-\x1F\x7F]/g, '').trim();
     return this.timerLogRepo.find({
-      where: { user_id, subject: cleanedSubject, date },
+      where: { user_id, group_id, date },
       order: { timestamp: 'ASC' },
     });
   }

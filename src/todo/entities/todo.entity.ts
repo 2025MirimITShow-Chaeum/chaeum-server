@@ -31,10 +31,6 @@ export class Todo {
   @JoinColumn({ name: 'group_id' })
   group_id: string;
 
-  @ManyToOne(() => Groups)
-  @JoinColumn({ name: 'group_id' })
-  group: Groups;
-
   @Column({ name: 'title', length: 50, nullable: false })
   title: string;
 

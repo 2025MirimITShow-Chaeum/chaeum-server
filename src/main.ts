@@ -18,6 +18,6 @@ async function bootstrap() {
   const colorService = app.get(ColorService); // 색상 저장때문에 추가
   await colorService.seedColors();
 
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
 }
 bootstrap();

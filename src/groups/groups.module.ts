@@ -16,6 +16,7 @@ import { AttendanceRecords } from './entities/attendance_records.entity';
 import { GroupAttendanceService } from './services/group-attendance.service';
 import { Todo } from 'src/todo/entities/todo.entity';
 import { GroupAttendanceLog } from './entities/group_attendance_log.entity';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { GroupAttendanceLog } from './entities/group_attendance_log.entity';
       AttendanceRecords,
       Todo,
       GroupAttendanceLog,
+      AuthModule,
     ]),
     ColorModule,
   ],

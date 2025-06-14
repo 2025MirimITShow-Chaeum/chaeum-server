@@ -8,11 +8,14 @@ import {
   ParseIntPipe,
   Param,
   Patch,
+  UseGuards,
 } from '@nestjs/common';
 import { TodosService } from './todo.service';
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreateTodoDTO } from './dto/create-todo.dto';
 import { UpdateTodoDTO } from './dto/update_todo.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { UserInfo } from 'src/auth/decorators/user-info.decorator';
 
 @Controller('api/todos')
 export class TodosController {
@@ -41,10 +44,11 @@ export class TodosController {
   }
 
   // 유저 개인의 전체 투두 조회
+  @UseGuards(AuthGuard('jwt'))
   @Get('user/:user_id')
   @ApiOperation({ summary: 'Todo 조회' })
   @ApiResponse({ status: 201, description: 'Todo 조회 성공' })
-  async getTodosByUser(@Param('user_id') user_id: string) {
+  async getTodosByUser(@UserInfo('user_id') user_id: string) {
     return this.todosService.findTodosByUser(user_id);
   }
 

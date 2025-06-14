@@ -61,10 +61,7 @@ export class TodosController {
   @ApiBody({ type: UpdateTodoDTO })
   @ApiResponse({ status: 200, description: 'Todo 수정 성공' })
   @ApiResponse({ status: 404, description: 'Todo를 찾을 수 없음' })
-  async update(
-    @Param('todo_id', ParseIntPipe) todo_id: number,
-    @Body() updateTodoDTO: UpdateTodoDTO,
-  ) {
+  async update(@Param('todo_id', ParseIntPipe) todo_id: number, @Body() updateTodoDTO: UpdateTodoDTO) {
     return this.todosService.update(todo_id, updateTodoDTO);
   }
 

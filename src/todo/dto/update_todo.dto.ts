@@ -10,4 +10,8 @@ export class UpdateTodoDTO {
   @Type(() => Boolean)
   @IsBoolean()
   is_completed?: boolean;
+
+  @IsOptional()
+  @IsString()
+  group_id?: string;
 }

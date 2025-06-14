@@ -28,6 +28,7 @@ export class GroupAttendanceService {
     }
 
     const today = dayjs().format('YYYY-MM-DD'); // YYYY-MM-DD 포맷 문자열
+    const yesterday = dayjs().subtract(1, 'day').format('YYYY-MM-DD');
 
     // 오늘 이미 출석 로그가 있는지 체크
     const existingLog = await this.attendanceLogRepository.findOne({
@@ -47,6 +48,14 @@ export class GroupAttendanceService {
         message: '이미 오늘 출석 체크가 완료되었습니다.',
       };
     }
+
+    // *
+    const yesterdayLog = await this.attendanceLogRepository.findOne({
+      where: {
+        group: { group_id },
+        date: yesterday,
+      },
+    });
 
     const startOfToday = dayjs().startOf('day').toDate();
     const endOfToday = dayjs().endOf('day').toDate();
@@ -88,8 +97,10 @@ export class GroupAttendanceService {
       group.attendance_count += 1;
       await this.groupRepository.save(group);
     } else {
-      group.attendance_count = 0;
-      await this.groupRepository.save(group);
+      if (yesterdayLog) {
+        group.attendance_count = 0;
+        await this.groupRepository.save(group);
+      }
     }
 
     return {
@@ -100,7 +111,9 @@ export class GroupAttendanceService {
       members: attendanceResult,
       message: allAttended
         ? '오늘 모든 멤버 출석 완료!'
-        : '누락된 인원이 있어 출석 실패.',
+        : yesterdayLog
+          ? '출석 실패! 출석일 0으로 초기화됨'
+          : '출석 실패 (첫 출석 or 이미 실패 중)',
     };
   }
 
@@ -133,15 +146,6 @@ export class GroupAttendanceService {
       return [];
     }
 
-    // const allGroups = await this.groupRepository.find();
-    // const sorted = allGroups
-    //   .sort((a, b) => (b.attendance_count = a.attendance_count))
-    //   .map((group, index) => ({
-    //     group_id: group.group_id,
-    //     group_name: group.name,
-    //     attendance_count: group.attendance_count,
-    //     rank: index + 1,
-    //   }));
     const allGroups = await this.groupRepository.find({
       select: ['group_id', 'name', 'attendance_count'],
     });
@@ -165,9 +169,6 @@ export class GroupAttendanceService {
         where: { user_id },
       })
     ).map((gm) => gm.group_id);
-    // const userGroupRanks = sorted.filter((g) =>
-    //   userGroups.some((ug) => ug.group_id === g.group_id),
-    // );
 
     // return userGroupRanks;
     return ranked.filter((group) => userGroupIds.includes(group.group_id));

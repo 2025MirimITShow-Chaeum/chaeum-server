@@ -3,10 +3,10 @@ import {
   Post,
   Body,
   Get,
-  Query,
   Param,
   Patch,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { GroupsService } from './groups.service';
 import { CreateGroupDto } from './dto/create-group.dto';
@@ -15,6 +15,8 @@ import { UpdateGroupDto } from './dto/update-group.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { GroupQueryService } from './services/group-query.service';
 import { GroupAttendanceService } from './services/group-attendance.service';
+import { AuthGuard } from '@nestjs/passport';
+import { UserInfo } from 'src/auth/decorators/user-info.decorator';
 
 @Controller('api/group')
 export class GroupsController {
@@ -29,8 +31,9 @@ export class GroupsController {
     return this.groupAttendanceService.getGroupRanking();
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Get('/ranking/user')
-  async getUserGroupRanking(@Query('user_id') user_id: string) {
+  async getUserGroupRanking(@UserInfo('user_id') user_id: string) {
     return this.groupAttendanceService.getUserGroupRanking(user_id);
   }
 
@@ -46,6 +49,7 @@ export class GroupsController {
     return this.groupService.createGroup(dto);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Get()
   @ApiOperation({
     summary: '그룹 정보 조회',
@@ -54,7 +58,7 @@ export class GroupsController {
   @ApiResponse({ status: 200, description: '그룹 조회 성공' })
   @ApiResponse({ status: 404, description: '그룹 정보 없음' })
   @ApiResponse({ status: 500, description: '그룹 정보 조회 실패' })
-  async get(@Query('user_id') user_id: string) {
+  async get(@UserInfo('user_id') user_id: string) {
     return this.groupService.get(user_id);
   }
 
@@ -100,6 +104,7 @@ export class GroupsController {
     return this.groupService.updateGroup(group_id, dto);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Delete('/:group_id/leave')
   @ApiOperation({
     summary: '그룹 탈퇴',
@@ -110,17 +115,18 @@ export class GroupsController {
   @ApiResponse({ status: 500, description: '그룹 탈퇴 실패' })
   async leaveGroup(
     @Param('group_id') group_id: string,
-    @Query('user_id') user_id: string,
+    @UserInfo('user_id') user_id: string,
   ) {
     return this.groupService.leaveGroup(group_id, user_id);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Get(':group_id/member/:user_id')
   async getGroupMemberDetail(
-    @Param('group_id') groupId: string,
-    @Param('user_id') userId: string,
+    @Param('group_id') group_id: string,
+    @UserInfo('user_id') user_id: string,
   ) {
-    return this.groupQueryService.getGroupMemberDetail(groupId, userId);
+    return this.groupQueryService.getGroupMemberDetail(group_id, user_id);
   }
 
   @Post(':group_id/attendance')

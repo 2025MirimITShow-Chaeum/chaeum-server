@@ -68,6 +68,7 @@ export class GroupQueryService {
       subject: group.subject,
       member_count: members.length,
       members: memberList,
+      secret_code: group.secret_code,
     };
   }
 

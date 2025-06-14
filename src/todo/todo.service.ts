@@ -135,6 +135,22 @@ export class TodosService {
       todo.finished_at = updateTodoDTO.is_completed ? new Date() : null;
     }
 
+    if (updateTodoDTO.group_id !== undefined && updateTodoDTO.group_id !== todo.group_id) {
+      const newMembership = await this.groupMembersRepository.findOne({
+        where: {
+          group_id: updateTodoDTO.group_id,
+          user_id: todo.user_id,
+        },
+      });
+
+      if (!newMembership) {
+        throw new ForbiddenException('변경하려는 그룹에 사용자가 속해있지 않습니다.');
+      }
+
+      todo.group_id = updateTodoDTO.group_id;
+      todo.user_color = newMembership.color;
+    }
+
     await this.todosRepository.save(todo);
 
     return {

@@ -27,9 +27,12 @@ export class Todo {
 
   @Column()
   @Index()
+  group_id: string;
+
   @ManyToOne(() => Groups, (group) => group.todos)
   @JoinColumn({ name: 'group_id' })
-  group_id: string;
+  group: Groups;
+  
 
   @Column({ name: 'title', length: 50, nullable: false })
   title: string;

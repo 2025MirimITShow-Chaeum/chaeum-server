@@ -10,5 +10,6 @@ import { User } from 'src/user/entities/user.entity';
   imports: [TypeOrmModule.forFeature([Todo, GroupMembers, User])],
   providers: [TodosService],
   controllers: [TodosController],
+  exports: [TodosService],
 })
 export class TodoModule {}

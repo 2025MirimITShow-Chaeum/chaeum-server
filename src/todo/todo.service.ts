@@ -105,6 +105,16 @@ export class TodosService {
     };
   }
 
+  // 유저의 그룹별 투두 조회
+  async findTodosByGroupAndUser(user_id: string, group_id: string) {
+    const todos = await this.todosRepository.find({
+      where: { user_id, group_id },
+      order: { created_at: 'DESC' },
+    });
+
+    return todos;
+  }
+
   // 투두 내용 수정
   async update(todoId: number, updateTodoDTO: UpdateTodoDTO) {
     const todo = await this.todosRepository.findOne({

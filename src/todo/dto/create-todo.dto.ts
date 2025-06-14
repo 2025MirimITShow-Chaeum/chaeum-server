@@ -17,7 +17,7 @@ export class CreateTodoDTO {
   title: string;
 
   // 투두 상태
-  @IsBoolean()
-  @IsNotEmpty()
-  is_completed: boolean;
+  // @IsBoolean()
+  // @IsNotEmpty()
+  // is_completed: boolean;
 }

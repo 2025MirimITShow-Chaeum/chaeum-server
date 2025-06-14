@@ -34,11 +34,11 @@ export class TodosController {
     }
   }
 
-  // 그룹 전체 멤버의 투두 조회
-  // @Get('group/:group_id')
-  // async getTodosByGroup(@Param('group_id') group_id: string) {
-  //   return this.todosService.findTodosByGroup(group_id);
-  // }
+  //그룹 전체 멤버의 투두 조회
+  @Get('group/:group_id')
+  async getTodosByGroup(@Param('group_id') group_id: string) {
+    return this.todosService.findTodosByGroup(group_id);
+  }
 
   // 유저 개인의 전체 투두 조회
   @Get('user/:user_id')

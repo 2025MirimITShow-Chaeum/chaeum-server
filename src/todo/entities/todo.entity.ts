@@ -27,6 +27,8 @@ export class Todo {
 
   @Column()
   @Index()
+  @ManyToOne(() => Groups, (group) => group.todos)
+  @JoinColumn({ name: 'group_id' })
   group_id: string;
 
   @ManyToOne(() => Groups)
@@ -36,7 +38,7 @@ export class Todo {
   @Column({ name: 'title', length: 50, nullable: false })
   title: string;
 
-  @Column({ name: 'is_completed', default: false })
+  @Column({ type: 'boolean', name: 'is_completed', default: false })
   is_completed: boolean;
 
   @Column({ name: 'user_color', nullable: true })

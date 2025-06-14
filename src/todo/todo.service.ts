@@ -26,16 +26,22 @@ export class TodosService {
   async create(createTodoDTO: CreateTodoDTO) {
     const { user_id, group_id } = createTodoDTO;
 
+    console.log('user_id:', user_id);
+    console.log('group_id:', group_id);
+
     // 그룹 멤버 검증
     const membership = await this.groupMembersRepository.findOne({
-      where: { group_id, member_id: user_id },
+      where: { group_id, user_id },
     });
     if (!membership) {
       throw new ForbiddenException('해당 그룹의 멤버가 아닙니다.');
     }
 
     try {
-      const todo = this.todosRepository.create(createTodoDTO);
+      const todo = this.todosRepository.create({
+        ...createTodoDTO,
+        user_color: membership.color,
+      });
       await this.todosRepository.save(todo);
 
       return {
@@ -58,7 +64,7 @@ export class TodosService {
       where: { group_id },
     });
 
-    const memberIds = members.map((member) => member.member_id);
+    const memberIds = members.map((member) => member.user_id);
 
     // 그룹에 멤버가 없으면 빈 배열 반환
     if (memberIds.length === 0) {

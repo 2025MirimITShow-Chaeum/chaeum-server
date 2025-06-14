@@ -14,13 +14,20 @@ import { JoinGroupDto } from './dto/join-group.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { GroupQueryService } from './services/group-query.service';
+import { GroupAttendanceService } from './services/group-attendance.service';
 
 @Controller('api/group')
 export class GroupsController {
   constructor(
     private readonly groupService: GroupsService,
     private readonly groupQueryService: GroupQueryService,
+    private readonly groupAttendanceService: GroupAttendanceService,
   ) {}
+
+  @Get('/ranking')
+  async getRanking() {
+    return this.groupAttendanceService.getGroupRanking();
+  }
 
   @Post()
   @ApiOperation({
@@ -109,5 +116,10 @@ export class GroupsController {
     @Param('user_id') userId: string,
   ) {
     return this.groupQueryService.getGroupMemberDetail(groupId, userId);
+  }
+
+  @Post(':group_id/attendance')
+  async checkAttendance(@Param('group_id') group_id: string) {
+    return this.groupAttendanceService.checkGroupAttendance(group_id);
   }
 }

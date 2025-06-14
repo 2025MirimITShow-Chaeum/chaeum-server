@@ -119,4 +119,57 @@ export class GroupAttendanceService {
       attendance_count: g.attendance_count,
     }));
   }
+
+  async getUserGroupRanking(user_id: string) {
+    // 유저가 속한 그룹들 가져오기
+    const membership = await this.groupMembersRepository.find({
+      where: { user_id },
+      relations: ['group'],
+    });
+
+    const userGroups = membership.map((m) => m.group);
+
+    if (userGroups.length === 0) {
+      return [];
+    }
+
+    // const allGroups = await this.groupRepository.find();
+    // const sorted = allGroups
+    //   .sort((a, b) => (b.attendance_count = a.attendance_count))
+    //   .map((group, index) => ({
+    //     group_id: group.group_id,
+    //     group_name: group.name,
+    //     attendance_count: group.attendance_count,
+    //     rank: index + 1,
+    //   }));
+    const allGroups = await this.groupRepository.find({
+      select: ['group_id', 'name', 'attendance_count'],
+    });
+
+    // 1. attendance_count 내림차순 정렬
+    const sorted = allGroups.sort(
+      (a, b) => b.attendance_count - a.attendance_count,
+    );
+
+    // 2. 각 그룹에 rank 부여
+    const ranked = sorted.map((group, index) => ({
+      group_id: group.group_id,
+      group_name: group.name,
+      attendance_count: group.attendance_count,
+      rank: index + 1,
+    }));
+
+    // 3. 유저가 속한 그룹만 필터링
+    const userGroupIds = (
+      await this.groupMembersRepository.find({
+        where: { user_id },
+      })
+    ).map((gm) => gm.group_id);
+    // const userGroupRanks = sorted.filter((g) =>
+    //   userGroups.some((ug) => ug.group_id === g.group_id),
+    // );
+
+    // return userGroupRanks;
+    return ranked.filter((group) => userGroupIds.includes(group.group_id));
+  }
 }

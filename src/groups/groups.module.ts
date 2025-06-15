@@ -17,6 +17,7 @@ import { GroupAttendanceService } from './services/group-attendance.service';
 import { Todo } from 'src/todo/entities/todo.entity';
 import { GroupAttendanceLog } from './entities/group_attendance_log.entity';
 import { AuthModule } from 'src/auth/auth.module';
+import { GroupDeleteService } from './services/group-delete.service';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { AuthModule } from 'src/auth/auth.module';
     GroupQueryService,
     GroupAttendanceService,
     ColorService,
+    GroupDeleteService,
   ],
   controllers: [GroupsController],
   exports: [GroupsService],

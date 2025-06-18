@@ -18,7 +18,7 @@ export class Dday {
   user_id: string;
 
   // 연결된 User 객체
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, (user) => user.ddays, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   user: User;
 

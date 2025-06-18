@@ -22,6 +22,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { UserInfo } from 'src/auth/decorators/user-info.decorator';
 import { Groups } from './entities/group.entity';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('api/group')
 export class GroupsController {
   constructor(
@@ -38,7 +39,6 @@ export class GroupsController {
     return this.groupAttendanceService.getGroupRanking();
   }
 
-  @UseGuards(AuthGuard('jwt'))
   @Get('/ranking/user')
   async getUserGroupRanking(@UserInfo('user_id') user_id: string) {
     return this.groupAttendanceService.getUserGroupRanking(user_id);
@@ -52,11 +52,13 @@ export class GroupsController {
   @ApiResponse({ status: 200, description: '그룹 생성 성공' })
   @ApiResponse({ status: 404, description: '그룹 생성 없음' })
   @ApiResponse({ status: 500, description: '그룹 생성 실패' })
-  async create(@Body() dto: CreateGroupDto) {
-    return this.groupService.createGroup(dto);
+  async create(
+    @UserInfo('user_id') user_id: string,
+    @Body() dto: CreateGroupDto,
+  ) {
+    return this.groupService.createGroup(user_id, dto);
   }
 
-  @UseGuards(AuthGuard('jwt'))
   @Get()
   @ApiOperation({
     summary: '그룹 정보 조회',
@@ -79,7 +81,7 @@ export class GroupsController {
   @ApiResponse({ status: 404, description: '그룹 참가 없음' })
   @ApiResponse({ status: 500, description: '그룹 참가 실패' })
   async join(@UserInfo('user_id') user_id: string, @Body() dto: JoinGroupDto) {
-    return this.groupService.joinGroup({ ...dto, user_id });
+    return this.groupService.joinGroup(user_id, dto);
   }
 
   // 단일 스터디 조회
@@ -111,7 +113,6 @@ export class GroupsController {
     return this.groupService.updateGroup(group_id, dto);
   }
 
-  @UseGuards(AuthGuard('jwt'))
   @Delete('/:group_id/leave')
   @ApiOperation({
     summary: '그룹 탈퇴',
@@ -127,8 +128,7 @@ export class GroupsController {
     return this.groupService.leaveGroup(group_id, user_id);
   }
 
-  @UseGuards(AuthGuard('jwt'))
-  @Get(':group_id/member/:user_id')
+  @Get(':group_id/member')
   async getGroupMemberDetail(
     @Param('group_id') group_id: string,
     @UserInfo('user_id') user_id: string,
@@ -154,23 +154,22 @@ export class GroupsController {
     return this.groupService.deleteGroup(group_id, user_id);
   }
 
-
   // 출석일 수정
   @Patch(':group_id/attendance-count')
-    async updateAttendanceCount(
-      @Param('group_id') group_id: string,
-      @Body('attendance_count') attendanceCount: number,
-    ) {
-      const group = await this.groupRepository.findOne({ where: { group_id } });
-      if (!group) throw new NotFoundException('Group not found');
+  async updateAttendanceCount(
+    @Param('group_id') group_id: string,
+    @Body('attendance_count') attendanceCount: number,
+  ) {
+    const group = await this.groupRepository.findOne({ where: { group_id } });
+    if (!group) throw new NotFoundException('Group not found');
 
-      group.attendance_count = attendanceCount;
-      await this.groupRepository.save(group);
+    group.attendance_count = attendanceCount;
+    await this.groupRepository.save(group);
 
-      return {
-        message: `출석 카운트가 ${attendanceCount}로 업데이트되었습니다.`,
-        group_id,
-        attendance_count: group.attendance_count,
-      };
-    }
+    return {
+      message: `출석 카운트가 ${attendanceCount}로 업데이트되었습니다.`,
+      group_id,
+      attendance_count: group.attendance_count,
+    };
+  }
 }

@@ -27,7 +27,7 @@ export class GroupCreateService {
   ) {}
 
   // 스터디 그룹 생성
-  async createGroup(dto: CreateGroupDto): Promise<any> {
+  async createGroup(user_id: string, dto: CreateGroupDto): Promise<any> {
     try {
       let group_id: string;
       while (true) {
@@ -44,7 +44,7 @@ export class GroupCreateService {
         .toUpperCase();
 
       const user = await this.userRepository.findOne({
-        where: { uid: dto.user_id },
+        where: { uid: user_id },
       });
       if (!user) throw new NotFoundException('사용자 없음');
 
@@ -67,7 +67,7 @@ export class GroupCreateService {
 
       const newMember = this.groupMembersRepository.create({
         member_id: uuidv4(),
-        user_id: dto.user_id,
+        user_id: user_id,
         group_id,
         role: GroupRole.LEADER,
         color: leaderColor,

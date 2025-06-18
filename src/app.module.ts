@@ -7,7 +7,7 @@ import { UsersModule } from './user/user.module';
 import { typeORMConfig } from './ormconfig';
 import { FirebaseModule } from './firebase/firebase.module';
 import { AuthModule } from './auth/auth.module';
-import { DdayModule } from './Dday/dday.module';
+import { DdayModule } from './dday/dday.module';
 import { GroupsModule } from './groups/groups.module';
 import { ColorModule } from './color/color.module';
 import { ColorController } from './color/color.controller';

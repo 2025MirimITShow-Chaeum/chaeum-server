@@ -30,7 +30,7 @@ export class DdayService {
     }
 
     try {
-      const dday = this.ddayRepository.create(createDdayDTO);
+      const dday = this.ddayRepository.create({ ...createDdayDTO, user_id });
       await this.ddayRepository.save(dday);
 
       return {

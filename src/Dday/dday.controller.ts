@@ -42,29 +42,29 @@ export class DdayController {
 
   // D-Day 수정
   @UseGuards(AuthGuard('jwt'))
-  @Patch(':Dday_id')
+  @Patch(':id')
   @ApiOperation({ summary: 'D-Day 수정', description: 'D-Day를 수정합니다.' })
   @ApiBody({ type: UpdateDdayDTO })
   @ApiResponse({ status: 200, description: 'D-Day 수정 성공' })
   @ApiResponse({ status: 404, description: 'D-Day 찾을 수 없음' })
   async update(
     @UserInfo('uid') uid: string,
-    @Param('Dday_id', ParseIntPipe) Dday_id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateDdayDTO: UpdateDdayDTO,
   ) {
-    return this.ddayService.update(Dday_id, updateDdayDTO, uid);
+    return this.ddayService.update(id, updateDdayDTO, uid);
   }
 
   // D-Day 삭제
   @UseGuards(AuthGuard('jwt'))
-  @Delete(':Dday_id')
+  @Delete(':id')
   @ApiOperation({ summary: 'D-Day 삭제', description: 'D-Day를 삭제합니다.' })
   @ApiResponse({ status: 200, description: 'D-Day 삭제 성공' })
   @ApiResponse({ status: 404, description: 'D-Day가 존재하지 않습니다.' })
   async delete(
     @UserInfo('uid') uid: string,
-    @Param('Dday_id', ParseIntPipe) Dday_id: number,
+    @Param('id', ParseIntPipe) id: number,
   ) {
-    return this.ddayService.delete(Dday_id, uid);
+    return this.ddayService.delete(id, uid);
   }
 }

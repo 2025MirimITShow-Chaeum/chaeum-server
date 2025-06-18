@@ -33,7 +33,7 @@ export class TodosController {
     @Body() dto: CreateTodoDTO,
   ) {
     try {
-      const result = await this.todosService.create({ ...dto, user_id });
+      const result = await this.todosService.create(user_id, dto);
       return { message: 'TODO 생성 성공', data: result };
     } catch (e) {
       console.error(e);

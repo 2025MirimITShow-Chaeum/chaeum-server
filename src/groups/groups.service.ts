@@ -5,6 +5,7 @@ import { GroupJoinService } from './services/group-join.service';
 import { GroupUpdateService } from './services/group-update.service';
 import { GroupLeaveService } from './services/group-leave.service';
 import { GroupDeleteService } from './services/group-delete.service';
+import { JoinGroupDto } from './dto/join-group.dto';
 
 @Injectable()
 export class GroupsService {
@@ -17,16 +18,16 @@ export class GroupsService {
     private readonly groupDeleteService: GroupDeleteService,
   ) {}
 
-  async createGroup(dto: any) {
-    return await this.groupCreateService.createGroup(dto);
+  async createGroup(user_id: string, dto: any) {
+    return await this.groupCreateService.createGroup(user_id, dto);
   }
 
   async get(user_id: string) {
     return await this.groupQueryService.getGroupsByUser(user_id);
   }
 
-  async joinGroup(dto: any) {
-    return await this.groupJoinService.joinGroup(dto);
+  async joinGroup(user_id: string, dto: JoinGroupDto) {
+    return await this.groupJoinService.joinGroup(user_id, dto);
   }
 
   async getGroup(group_id: string) {
@@ -44,5 +45,4 @@ export class GroupsService {
   async deleteGroup(group_id: string, user_id: string) {
     return await this.groupDeleteService.deleteGroup(group_id, user_id);
   }
-
 }

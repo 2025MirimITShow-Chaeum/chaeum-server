@@ -9,7 +9,6 @@ import { GroupMembers, GroupRole } from '../entities/group-members.entity';
 import { Groups } from '../entities/group.entity';
 import { JoinGroupDto } from '../dto/join-group.dto';
 import { ColorService } from 'src/color/color.service';
-// import { User } from 'src/user/entities/user.entity';
 import { v4 as uuidv4 } from 'uuid';
 import { Injectable } from '@nestjs/common';
 
@@ -29,7 +28,10 @@ export class GroupJoinService {
   ) {}
 
   // 스터디 참가
-  async joinGroup(dto: JoinGroupDto) {
+  async joinGroup(
+    user_id: string,
+    dto: { joinCode: string; join_members?: string[] },
+  ) {
     try {
       const group = await this.groupRepository.findOne({
         where: { secret_code: dto.joinCode },
@@ -40,7 +42,7 @@ export class GroupJoinService {
       }
 
       const exists = await this.groupMembersRepository.findOne({
-        where: { user_id: dto.user_id, group_id: group.group_id },
+        where: { user_id: user_id, group_id: group.group_id },
       });
 
       if (exists) {
@@ -66,7 +68,7 @@ export class GroupJoinService {
 
       const newMember = this.groupMembersRepository.create({
         member_id: uuidv4(),
-        user_id: dto.user_id,
+        user_id: user_id,
         group_id: group.group_id,
         role: GroupRole.MEMBER,
         color: memberColor,

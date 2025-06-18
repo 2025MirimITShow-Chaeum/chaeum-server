@@ -7,7 +7,10 @@ import {
   Patch,
   Delete,
   UseGuards,
+  NotFoundException,
 } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { GroupsService } from './groups.service';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { JoinGroupDto } from './dto/join-group.dto';
@@ -17,6 +20,7 @@ import { GroupQueryService } from './services/group-query.service';
 import { GroupAttendanceService } from './services/group-attendance.service';
 import { AuthGuard } from '@nestjs/passport';
 import { UserInfo } from 'src/auth/decorators/user-info.decorator';
+import { Groups } from './entities/group.entity';
 
 @Controller('api/group')
 export class GroupsController {
@@ -24,6 +28,9 @@ export class GroupsController {
     private readonly groupService: GroupsService,
     private readonly groupQueryService: GroupQueryService,
     private readonly groupAttendanceService: GroupAttendanceService,
+
+    @InjectRepository(Groups)
+    private readonly groupRepository: Repository<Groups>,
   ) {}
 
   @Get('/ranking')
@@ -71,8 +78,8 @@ export class GroupsController {
   @ApiResponse({ status: 200, description: '그룹 참가 성공' })
   @ApiResponse({ status: 404, description: '그룹 참가 없음' })
   @ApiResponse({ status: 500, description: '그룹 참가 실패' })
-  async join(@Body() dto: JoinGroupDto) {
-    return this.groupService.joinGroup(dto);
+  async join(@UserInfo('user_id') user_id: string, @Body() dto: JoinGroupDto) {
+    return this.groupService.joinGroup({ ...dto, user_id });
   }
 
   // 단일 스터디 조회
@@ -133,4 +140,37 @@ export class GroupsController {
   async checkAttendance(@Param('group_id') group_id: string) {
     return this.groupAttendanceService.checkGroupAttendance(group_id);
   }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Delete('/:group_id')
+  @ApiOperation({ summary: '그룹 삭제', description: '그룹을 삭제합니다.' })
+  @ApiResponse({ status: 200, description: '그룹 삭제 성공' })
+  @ApiResponse({ status: 404, description: '그룹 없음' })
+  @ApiResponse({ status: 500, description: '삭제 실패' })
+  async deleteGroup(
+    @Param('group_id') group_id: string,
+    @UserInfo('user_id') user_id: string,
+  ) {
+    return this.groupService.deleteGroup(group_id, user_id);
+  }
+
+
+  // 출석일 수정
+  @Patch(':group_id/attendance-count')
+    async updateAttendanceCount(
+      @Param('group_id') group_id: string,
+      @Body('attendance_count') attendanceCount: number,
+    ) {
+      const group = await this.groupRepository.findOne({ where: { group_id } });
+      if (!group) throw new NotFoundException('Group not found');
+
+      group.attendance_count = attendanceCount;
+      await this.groupRepository.save(group);
+
+      return {
+        message: `출석 카운트가 ${attendanceCount}로 업데이트되었습니다.`,
+        group_id,
+        attendance_count: group.attendance_count,
+      };
+    }
 }

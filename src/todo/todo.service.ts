@@ -26,13 +26,10 @@ export class TodosService {
   async create(createTodoDTO: CreateTodoDTO) {
     const { user_id, group_id } = createTodoDTO;
 
-    console.log('user_id:', user_id);
-    console.log('group_id:', group_id);
-
-    // 그룹 멤버 검증
     const membership = await this.groupMembersRepository.findOne({
       where: { group_id, user_id },
     });
+
     if (!membership) {
       throw new ForbiddenException('해당 그룹의 멤버가 아닙니다.');
     }
@@ -50,7 +47,7 @@ export class TodosService {
         data: todo,
       };
     } catch (err) {
-      console.log(err);
+      console.error(err);
       throw new InternalServerErrorException(
         'Todo를 생성하는데 실패하였습니다.',
       );
@@ -59,14 +56,12 @@ export class TodosService {
 
   // 그룹 전체 멤버의 투두 조회
   async findTodosByGroup(group_id: string) {
-    // 1. 해당 그룹의 멤버 ID들 가져오기
     const members = await this.groupMembersRepository.find({
       where: { group_id },
     });
 
     const memberIds = members.map((member) => member.user_id);
 
-    // 그룹에 멤버가 없으면 빈 배열 반환
     if (memberIds.length === 0) {
       return {
         status: HttpStatus.OK,
@@ -75,7 +70,6 @@ export class TodosService {
       };
     }
 
-    // 2. 멤버들이 만든 투두들 조회
     const todos = await this.todosRepository.find({
       where: { user_id: In(memberIds), group_id },
       order: { created_at: 'DESC' },
@@ -93,9 +87,7 @@ export class TodosService {
   async findTodosByUser(user_id: string) {
     const todos = await this.todosRepository.find({
       where: { user_id },
-      order: {
-        created_at: 'DESC',
-      },
+      order: { created_at: 'DESC' },
     });
 
     return {
@@ -115,17 +107,20 @@ export class TodosService {
     return todos;
   }
 
-  // 투두 내용 수정
-  async update(todoId: number, updateTodoDTO: UpdateTodoDTO) {
+  // 투두 내용 수정 (user_id 포함)
+  async update(todoId: number, updateTodoDTO: UpdateTodoDTO, user_id: string) {
     const todo = await this.todosRepository.findOne({
-      where: { uid: Number(todoId) },
+      where: { uid: todoId },
     });
 
     if (!todo) {
       throw new NotFoundException('해당 Todo를 찾을 수 없습니다.');
     }
 
-    // 변경할 필드가 있다면 수정
+    if (todo.user_id !== user_id) {
+      throw new ForbiddenException('본인의 Todo만 수정할 수 있습니다.');
+    }
+
     if (updateTodoDTO.title !== undefined) {
       todo.title = updateTodoDTO.title;
     }
@@ -135,16 +130,21 @@ export class TodosService {
       todo.finished_at = updateTodoDTO.is_completed ? new Date() : null;
     }
 
-    if (updateTodoDTO.group_id !== undefined && updateTodoDTO.group_id !== todo.group_id) {
+    if (
+      updateTodoDTO.group_id !== undefined &&
+      updateTodoDTO.group_id !== todo.group_id
+    ) {
       const newMembership = await this.groupMembersRepository.findOne({
         where: {
           group_id: updateTodoDTO.group_id,
-          user_id: todo.user_id,
+          user_id,
         },
       });
 
       if (!newMembership) {
-        throw new ForbiddenException('변경하려는 그룹에 사용자가 속해있지 않습니다.');
+        throw new ForbiddenException(
+          '변경하려는 그룹에 사용자가 속해있지 않습니다.',
+        );
       }
 
       todo.group_id = updateTodoDTO.group_id;
@@ -160,14 +160,18 @@ export class TodosService {
     };
   }
 
-  // 투두 삭제
-  async delete(todo_id: number) {
+  // 투두 삭제 (user_id 포함)
+  async delete(todo_id: number, user_id: string) {
     const todo = await this.todosRepository.findOne({
       where: { uid: todo_id },
     });
 
     if (!todo) {
       throw new NotFoundException('삭제할 투두가 존재하지 않습니다.');
+    }
+
+    if (todo.user_id !== user_id) {
+      throw new ForbiddenException('본인의 Todo만 삭제할 수 있습니다.');
     }
 
     await this.todosRepository.delete(todo_id);

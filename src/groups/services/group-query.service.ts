@@ -27,6 +27,14 @@ export class GroupQueryService {
       relations: ['group'],
     });
 
+    // group_id 기준으로 중복 제거
+    const seen = new Set();
+    const filtered = groups.filter((member) => {
+      if (seen.has(member.group.group_id)) return false;
+      seen.add(member.group.group_id);
+      return true;
+    });
+
     return groups.map((member) => ({
       group_id: member.group.group_id,
       name: member.group.name,
@@ -54,7 +62,7 @@ export class GroupQueryService {
 
     // 멤버 정보 가공
     const memberList = members.map((member) => ({
-      uid: member.user.uid,
+      uid: member.user?.uid ?? member.user_id,
       nickname: member.user.nickname ?? '이름 없음',
       profileImage: member.user.profile_image ?? '',
       color: member.color,

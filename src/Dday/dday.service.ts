@@ -3,6 +3,7 @@ import {
   Injectable,
   InternalServerErrorException,
   NotFoundException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -25,13 +26,11 @@ export class DdayService {
   async create(createDdayDTO: CreateDdayDTO) {
     const { user_id, is_main } = createDdayDTO;
 
-    // 유저 존재 여부 체크
     const user = await this.userRepository.findOne({ where: { uid: user_id } });
     if (!user) {
       throw new NotFoundException('해당 유저를 찾을 수 없습니다.');
     }
 
-    // 새로 생성할 D-Day가 메인인 경우 기존 메인 D-Day 초기화
     if (is_main) {
       await this.ddayRepository.update(
         { user_id, is_main: true },
@@ -50,14 +49,12 @@ export class DdayService {
       };
     } catch (err) {
       console.error(err);
-      throw new InternalServerErrorException(
-        'D-Day를 생성하는데 실패하였습니다.',
-      );
+      throw new InternalServerErrorException('D-Day 생성 실패');
     }
   }
 
-  // D-Day 조회
-  async get(user_id: string) {
+  // 유저의 전체 D-Day 조회
+  async getAllByUser(user_id: string) {
     const ddayList = await this.ddayRepository.find({
       where: { user_id },
       order: { end_at: 'ASC' },
@@ -65,19 +62,22 @@ export class DdayService {
 
     return {
       status: HttpStatus.OK,
-      message: '해당 유저의 D-Day를 성공적으로 조회했습니다.',
+      message: '해당 유저의 D-Day 전체 조회 성공',
       data: ddayList,
     };
   }
 
   // D-Day 수정
-  async update(Dday_id: number, updateDdayDTO: UpdateDdayDTO) {
+  async update(Dday_id: number, updateDdayDTO: UpdateDdayDTO, user_id: string) {
     const dday = await this.ddayRepository.findOne({ where: { uid: Dday_id } });
     if (!dday) {
       throw new NotFoundException('해당 D-Day를 찾을 수 없습니다.');
     }
 
-    // 업데이트 요청이 메인으로 변경될 경우 기존 메인 D-Day 초기화
+    if (dday.user_id !== user_id) {
+      throw new ForbiddenException('본인의 D-Day만 수정할 수 있습니다.');
+    }
+
     if (updateDdayDTO.is_main) {
       await this.ddayRepository.update(
         { user_id: dday.user_id, is_main: true },
@@ -85,7 +85,6 @@ export class DdayService {
       );
     }
 
-    // 변경할 필드 적용
     if (updateDdayDTO.title !== undefined) {
       dday.title = updateDdayDTO.title;
     }
@@ -100,23 +99,27 @@ export class DdayService {
 
     return {
       status: HttpStatus.OK,
-      message: '해당 유저의 D-Day를 성공적으로 수정했습니다.',
+      message: 'D-Day 수정 성공',
       data: dday,
     };
   }
 
   // D-Day 삭제
-  async delete(Dday_id: number) {
+  async delete(Dday_id: number, user_id: string) {
     const dday = await this.ddayRepository.findOne({ where: { uid: Dday_id } });
     if (!dday) {
       throw new NotFoundException('삭제할 D-Day가 존재하지 않습니다.');
+    }
+
+    if (dday.user_id !== user_id) {
+      throw new ForbiddenException('본인의 D-Day만 삭제할 수 있습니다.');
     }
 
     await this.ddayRepository.delete(Dday_id);
 
     return {
       status: HttpStatus.OK,
-      message: 'D-Day가 성공적으로 삭제되었습니다.',
+      message: 'D-Day 삭제 성공',
       data: { Dday_id },
     };
   }

@@ -22,14 +22,18 @@ export class TodosController {
   constructor(private todosService: TodosService) {}
 
   // 투두 생성
+  @UseGuards(AuthGuard('jwt'))
   @Post()
   @ApiOperation({ summary: 'Todo 추가', description: 'Todo를 추가합니다.' })
   @ApiBody({ type: CreateTodoDTO })
   @ApiResponse({ status: 201, description: 'Todo 생성 성공' })
   @ApiResponse({ status: 500, description: 'Todo 생성 실패' })
-  async create(@Body() dto: CreateTodoDTO) {
+  async create(
+    @UserInfo('user_id') user_id: string,
+    @Body() dto: CreateTodoDTO,
+  ) {
     try {
-      const result = await this.todosService.create(dto);
+      const result = await this.todosService.create({ ...dto, user_id });
       return { message: 'TODO 생성 성공', data: result };
     } catch (e) {
       console.error(e);
@@ -45,14 +49,15 @@ export class TodosController {
 
   // 유저 개인의 전체 투두 조회
   @UseGuards(AuthGuard('jwt'))
-  @Get('user/:user_id')
+  @Get('user')
   @ApiOperation({ summary: 'Todo 조회' })
-  @ApiResponse({ status: 201, description: 'Todo 조회 성공' })
+  @ApiResponse({ status: 200, description: 'Todo 조회 성공' })
   async getTodosByUser(@UserInfo('user_id') user_id: string) {
     return this.todosService.findTodosByUser(user_id);
   }
 
   // 투두 수정
+  @UseGuards(AuthGuard('jwt'))
   @Patch(':todo_id')
   @ApiOperation({
     summary: 'Todo 수정',
@@ -61,17 +66,24 @@ export class TodosController {
   @ApiBody({ type: UpdateTodoDTO })
   @ApiResponse({ status: 200, description: 'Todo 수정 성공' })
   @ApiResponse({ status: 404, description: 'Todo를 찾을 수 없음' })
-  async update(@Param('todo_id', ParseIntPipe) todo_id: number, @Body() updateTodoDTO: UpdateTodoDTO) {
-    return this.todosService.update(todo_id, updateTodoDTO);
+  async update(
+    @UserInfo('user_id') user_id: string,
+    @Param('todo_id', ParseIntPipe) todo_id: number,
+    @Body() updateTodoDTO: UpdateTodoDTO,
+  ) {
+    return this.todosService.update(todo_id, updateTodoDTO, user_id);
   }
 
   // 투두 삭제
+  @UseGuards(AuthGuard('jwt'))
   @Delete(':todo_id')
   @ApiOperation({ summary: 'Todo 삭제', description: 'Todo를 삭제합니다.' })
   @ApiResponse({ status: 200, description: 'Todo 삭제 성공' })
   @ApiResponse({ status: 404, description: '삭제할 Todo가 존재하지 않습니다.' })
-  // ParseUUIDPipe: UUID가 아닌 값이 들어오면 자동으로 예외 처리
-  async delete(@Param('todo_id', ParseIntPipe) todo_id: number) {
-    return this.todosService.delete(todo_id);
+  async delete(
+    @UserInfo('user_id') user_id: string,
+    @Param('todo_id', ParseIntPipe) todo_id: number,
+  ) {
+    return this.todosService.delete(todo_id, user_id);
   }
 }

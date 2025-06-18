@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { getAdminAuth } from 'firebase.config';
+import { getAdminAuth } from './firebase.config';
 import { Auth, DecodedIdToken } from 'firebase-admin/auth';
 
 @Injectable()

@@ -1,6 +1,6 @@
 import { SubjectTimer } from '../../subject-timers/entities/subject-timer.entity';
 import { TimerLog } from '../../timer-logs/entities/timer-log.entity';
-import { Dday } from '../../dday/entities/dday.entity';
+import { Dday } from '../../Dday/entities/dday.entity';
 import { Todo } from '../../todo/entities/todo.entity';
 import {
   Column,

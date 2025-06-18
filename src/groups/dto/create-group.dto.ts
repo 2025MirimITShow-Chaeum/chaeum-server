@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, Matches, IsUUID } from 'class-validator';
+import { IsNotEmpty, IsString, Matches, IsOptional } from 'class-validator';
 
 export class CreateGroupDto {
   @IsString()
@@ -6,8 +6,8 @@ export class CreateGroupDto {
   name: string;
 
   @IsString()
-  @IsNotEmpty()
-  subject: string;
+  @IsOptional()
+  subject?: string;
 
   @IsString()
   @Matches(/^#[0-9A-Fa-f]{6}$/, { message: 'HEX 형식의 색상 코드여야 합니다.' })

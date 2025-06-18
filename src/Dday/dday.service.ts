@@ -23,19 +23,10 @@ export class DdayService {
   ) {}
 
   // D-Day 생성
-  async create(createDdayDTO: CreateDdayDTO) {
-    const { user_id, is_main } = createDdayDTO;
-
+  async create(createDdayDTO: CreateDdayDTO, user_id) {
     const user = await this.userRepository.findOne({ where: { uid: user_id } });
     if (!user) {
       throw new NotFoundException('해당 유저를 찾을 수 없습니다.');
-    }
-
-    if (is_main) {
-      await this.ddayRepository.update(
-        { user_id, is_main: true },
-        { is_main: false },
-      );
     }
 
     try {

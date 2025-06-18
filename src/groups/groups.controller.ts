@@ -40,8 +40,8 @@ export class GroupsController {
   }
 
   @Get('/ranking/user')
-  async getUserGroupRanking(@UserInfo('user_id') user_id: string) {
-    return this.groupAttendanceService.getUserGroupRanking(user_id);
+  async getUserGroupRanking(@UserInfo('uid') uid: string) {
+    return this.groupAttendanceService.getUserGroupRanking(uid);
   }
 
   @Post()
@@ -52,11 +52,8 @@ export class GroupsController {
   @ApiResponse({ status: 200, description: '그룹 생성 성공' })
   @ApiResponse({ status: 404, description: '그룹 생성 없음' })
   @ApiResponse({ status: 500, description: '그룹 생성 실패' })
-  async create(
-    @UserInfo('user_id') user_id: string,
-    @Body() dto: CreateGroupDto,
-  ) {
-    return this.groupService.createGroup(user_id, dto);
+  async create(@UserInfo('uid') uid: string, @Body() dto: CreateGroupDto) {
+    return this.groupService.createGroup(uid, dto);
   }
 
   @Get()
@@ -67,8 +64,8 @@ export class GroupsController {
   @ApiResponse({ status: 200, description: '그룹 조회 성공' })
   @ApiResponse({ status: 404, description: '그룹 정보 없음' })
   @ApiResponse({ status: 500, description: '그룹 정보 조회 실패' })
-  async get(@UserInfo('user_id') user_id: string) {
-    return this.groupService.get(user_id);
+  async get(@UserInfo('uid') uid: string) {
+    return this.groupService.get(uid);
   }
 
   // 스터디 조인
@@ -80,8 +77,8 @@ export class GroupsController {
   @ApiResponse({ status: 200, description: '그룹 참가 성공' })
   @ApiResponse({ status: 404, description: '그룹 참가 없음' })
   @ApiResponse({ status: 500, description: '그룹 참가 실패' })
-  async join(@UserInfo('user_id') user_id: string, @Body() dto: JoinGroupDto) {
-    return this.groupService.joinGroup(user_id, dto);
+  async join(@UserInfo('uid') uid: string, @Body() dto: JoinGroupDto) {
+    return this.groupService.joinGroup(uid, dto);
   }
 
   // 단일 스터디 조회
@@ -123,17 +120,17 @@ export class GroupsController {
   @ApiResponse({ status: 500, description: '그룹 탈퇴 실패' })
   async leaveGroup(
     @Param('group_id') group_id: string,
-    @UserInfo('user_id') user_id: string,
+    @UserInfo('uid') uid: string,
   ) {
-    return this.groupService.leaveGroup(group_id, user_id);
+    return this.groupService.leaveGroup(group_id, uid);
   }
 
   @Get(':group_id/member')
   async getGroupMemberDetail(
     @Param('group_id') group_id: string,
-    @UserInfo('user_id') user_id: string,
+    @UserInfo('uid') uid: string,
   ) {
-    return this.groupQueryService.getGroupMemberDetail(group_id, user_id);
+    return this.groupQueryService.getGroupMemberDetail(group_id, uid);
   }
 
   @Post(':group_id/attendance')
@@ -149,9 +146,9 @@ export class GroupsController {
   @ApiResponse({ status: 500, description: '삭제 실패' })
   async deleteGroup(
     @Param('group_id') group_id: string,
-    @UserInfo('user_id') user_id: string,
+    @UserInfo('uid') uid: string,
   ) {
-    return this.groupService.deleteGroup(group_id, user_id);
+    return this.groupService.deleteGroup(group_id, uid);
   }
 
   // 출석일 수정

@@ -1,4 +1,4 @@
 export class JoinGroupDto {
   joinCode: string;
-  join_members: string[];
+  // join_members: string[];
 }

@@ -23,7 +23,7 @@ export class HomeController {
   })
   @ApiResponse({ status: 200, description: '조회 성공' })
   @ApiResponse({ status: 500, description: '정보 조회 실패' })
-  async findAllGroupTodoTime(@UserInfo('id') id: string) {
-    return this.homeService.findAllGroupTodoTime(id);
+  async findAllGroupTodoTime(@UserInfo('uid') uid: string) {
+    return this.homeService.findAllGroupTodoTime(uid);
   }
 }

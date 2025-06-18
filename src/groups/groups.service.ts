@@ -6,6 +6,7 @@ import { GroupUpdateService } from './services/group-update.service';
 import { GroupLeaveService } from './services/group-leave.service';
 import { GroupDeleteService } from './services/group-delete.service';
 import { JoinGroupDto } from './dto/join-group.dto';
+import { CreateGroupDto } from './dto/create-group.dto';
 
 @Injectable()
 export class GroupsService {
@@ -18,7 +19,7 @@ export class GroupsService {
     private readonly groupDeleteService: GroupDeleteService,
   ) {}
 
-  async createGroup(user_id: string, dto: any) {
+  async createGroup(user_id: string, dto: CreateGroupDto) {
     return await this.groupCreateService.createGroup(user_id, dto);
   }
 

@@ -19,7 +19,7 @@ export class Groups {
   name: string;
 
   @Column({ length: 500, nullable: true })
-  subject: string;
+  subject?: string;
 
   @Column()
   color: string;
@@ -40,14 +40,14 @@ export class Groups {
   create_at: Date;
 
   @OneToMany(() => SubjectTimer, (subjectTimer) => subjectTimer.group)
-  subject_timers: SubjectTimer[];
+  subject_timers?: SubjectTimer[];
 
   @OneToMany(() => TimerLog, (timer_log) => timer_log.group)
-  timer_logs: TimerLog[];
+  timer_logs?: TimerLog[];
 
   @OneToMany(() => Todo, (todo) => todo.user)
-  todos: Todo[];
+  todos?: Todo[];
 
   @OneToMany(() => GroupAttendanceLog, (log) => log.group)
-  attendanceLogs: GroupAttendanceLog[];
+  attendanceLogs?: GroupAttendanceLog[];
 }

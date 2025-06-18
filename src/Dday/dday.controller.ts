@@ -27,11 +27,8 @@ export class DdayController {
   @ApiBody({ type: CreateDdayDTO })
   @ApiResponse({ status: 201, description: 'D-Day 생성 성공' })
   @ApiResponse({ status: 500, description: 'D-Day 생성 실패' })
-  async create(
-    @UserInfo('user_id') user_id: string,
-    @Body() dto: CreateDdayDTO,
-  ) {
-    return this.ddayService.create({ ...dto, user_id });
+  async create(@UserInfo('uid') uid: string, @Body() dto: CreateDdayDTO) {
+    return this.ddayService.create(dto, uid);
   }
 
   // D-Day 전체 조회
@@ -39,8 +36,8 @@ export class DdayController {
   @Get()
   @ApiOperation({ summary: '유저별 D-Day 전체 조회' })
   @ApiResponse({ status: 200, description: '조회 성공' })
-  async getAll(@UserInfo('user_id') user_id: string) {
-    return this.ddayService.getAllByUser(user_id);
+  async getAll(@UserInfo('uid') uid: string) {
+    return this.ddayService.getAllByUser(uid);
   }
 
   // D-Day 수정
@@ -51,11 +48,11 @@ export class DdayController {
   @ApiResponse({ status: 200, description: 'D-Day 수정 성공' })
   @ApiResponse({ status: 404, description: 'D-Day 찾을 수 없음' })
   async update(
-    @UserInfo('user_id') user_id: string,
+    @UserInfo('uid') uid: string,
     @Param('Dday_id', ParseIntPipe) Dday_id: number,
     @Body() updateDdayDTO: UpdateDdayDTO,
   ) {
-    return this.ddayService.update(Dday_id, updateDdayDTO, user_id);
+    return this.ddayService.update(Dday_id, updateDdayDTO, uid);
   }
 
   // D-Day 삭제
@@ -65,9 +62,9 @@ export class DdayController {
   @ApiResponse({ status: 200, description: 'D-Day 삭제 성공' })
   @ApiResponse({ status: 404, description: 'D-Day가 존재하지 않습니다.' })
   async delete(
-    @UserInfo('user_id') user_id: string,
+    @UserInfo('uid') uid: string,
     @Param('Dday_id', ParseIntPipe) Dday_id: number,
   ) {
-    return this.ddayService.delete(Dday_id, user_id);
+    return this.ddayService.delete(Dday_id, uid);
   }
 }

@@ -4,19 +4,19 @@ import { Groups } from './entities/group.entity';
 import { GroupMembers } from './entities/group-members.entity';
 import { GroupsService } from './groups.service';
 import { GroupsController } from './groups.controller';
-import { User } from 'src/user/entities/user.entity';
-import { ColorModule } from 'src/color/color.module';
+import { User } from '../user/entities/user.entity';
+import { ColorModule } from '../color/color.module';
 import { GroupCreateService } from './services/group-create.service';
 import { GroupQueryService } from './services/group-query.service';
 import { GroupJoinService } from './services/group-join.service';
 import { GroupUpdateService } from './services/group-update.service';
-import { ColorService } from 'src/color/color.service';
+import { ColorService } from '../color/color.service';
 import { GroupLeaveService } from './services/group-leave.service';
 import { AttendanceRecords } from './entities/attendance_records.entity';
 import { GroupAttendanceService } from './services/group-attendance.service';
-import { Todo } from 'src/todo/entities/todo.entity';
+import { Todo } from '../todo/entities/todo.entity';
 import { GroupAttendanceLog } from './entities/group_attendance_log.entity';
-import { AuthModule } from 'src/auth/auth.module';
+import { AuthModule } from '../auth/auth.module';
 import { GroupDeleteService } from './services/group-delete.service';
 
 @Module({

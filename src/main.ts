@@ -7,6 +7,14 @@ import { ColorService } from './color/color.service';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.enableCors({
+    origin: [
+      'https://chaeum-client.vercel.app/',
+      `http:localhost:${process.env.PORT}`,
+    ],
+    credentials: true,
+  });
+
   const config = new DocumentBuilder()
     .setTitle('Chaeum API')
     .setDescription('The Chaeum API description')
@@ -18,6 +26,6 @@ async function bootstrap() {
   const colorService = app.get(ColorService); // 색상 저장때문에 추가
   await colorService.seedColors();
 
-  await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
+  await app.listen(process.env.PORT);
 }
 bootstrap();

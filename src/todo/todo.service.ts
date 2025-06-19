@@ -9,7 +9,7 @@ import {
   NotFoundException,
   ForbiddenException,
 } from '@nestjs/common';
-import { Todo } from 'src/todo/entities/todo.entity';
+import { Todo } from '../todo/entities/todo.entity';
 import { CreateTodoDTO } from './dto/create-todo.dto';
 
 @Injectable()

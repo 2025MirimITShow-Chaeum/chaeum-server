@@ -14,7 +14,7 @@ import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreateDdayDTO } from './dto/create-dday.dto';
 import { UpdateDdayDTO } from './dto/update-dday.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { UserInfo } from 'src/auth/decorators/user-info.decorator';
+import { UserInfo } from '../auth/decorators/user-info.decorator';
 
 @Controller('api/dday')
 export class DdayController {

@@ -15,7 +15,7 @@ import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreateTodoDTO } from './dto/create-todo.dto';
 import { UpdateTodoDTO } from './dto/update_todo.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { UserInfo } from 'src/auth/decorators/user-info.decorator';
+import { UserInfo } from '../auth/decorators/user-info.decorator';
 
 @Controller('api/todos')
 export class TodosController {

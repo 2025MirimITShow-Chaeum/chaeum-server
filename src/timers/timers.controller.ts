@@ -15,10 +15,10 @@ import {
   ApiResponse,
   ApiBearerAuth,
 } from '@nestjs/swagger';
-import { SubjectTimerService } from 'src/subject-timers/subject-timer.service';
-import { TimerLogService } from 'src/timer-logs/timer-log.service';
+import { SubjectTimerService } from '../subject-timers/subject-timer.service';
+import { TimerLogService } from '../timer-logs/timer-log.service';
 import { UserInfo } from '../auth/decorators/user-info.decorator';
-import { JwtAuthGuard } from 'src/config/jwt.config';
+import { JwtAuthGuard } from '../config/jwt.config';
 
 @UseGuards(JwtAuthGuard)
 @ApiTags('Timers')

@@ -1,7 +1,7 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Between, Repository } from 'typeorm';
 import { Groups } from '../entities/group.entity';
-import { Todo } from 'src/todo/entities/todo.entity';
+import { Todo } from '../../todo/entities/todo.entity';
 import { GroupMembers } from '../entities/group-members.entity';
 import { GroupAttendanceLog } from '../entities/group_attendance_log.entity';
 import dayjs from 'dayjs';

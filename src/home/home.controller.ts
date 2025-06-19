@@ -5,9 +5,9 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/config/jwt.config';
+import { JwtAuthGuard } from '../config/jwt.config';
 import { HomeService } from './home.service';
-import { UserInfo } from 'src/auth/decorators/user-info.decorator';
+import { UserInfo } from '../auth/decorators/user-info.decorator';
 
 @UseGuards(JwtAuthGuard)
 @ApiTags('Home API')

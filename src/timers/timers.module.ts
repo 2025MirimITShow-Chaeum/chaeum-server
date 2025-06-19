@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TimersController } from './timers.controller';
-import { SubjectTimerModule } from 'src/subject-timers/subject-timer.module';
-import { TimerLogModule } from 'src/timer-logs/timer-log.module';
+import { SubjectTimerModule } from '../subject-timers/subject-timer.module';
+import { TimerLogModule } from '../timer-logs/timer-log.module';
 
 @Module({
   imports: [SubjectTimerModule, TimerLogModule],

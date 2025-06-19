@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Color, ColorType } from './entities/color.entity';
-import { GroupMembers } from 'src/groups/entities/group-members.entity';
+import { GroupMembers } from '../groups/entities/group-members.entity';
 
 @Injectable()
 export class ColorService {

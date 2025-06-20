@@ -28,12 +28,9 @@ export class TodosController {
   @ApiBody({ type: CreateTodoDTO })
   @ApiResponse({ status: 201, description: 'Todo 생성 성공' })
   @ApiResponse({ status: 500, description: 'Todo 생성 실패' })
-  async create(
-    @UserInfo('user_id') user_id: string,
-    @Body() dto: CreateTodoDTO,
-  ) {
+  async create(@UserInfo('uid') uid: string, @Body() dto: CreateTodoDTO) {
     try {
-      const result = await this.todosService.create(user_id, dto);
+      const result = await this.todosService.create(uid, dto);
       return { message: 'TODO 생성 성공', data: result };
     } catch (e) {
       console.error(e);
@@ -52,8 +49,8 @@ export class TodosController {
   @Get('user')
   @ApiOperation({ summary: 'Todo 조회' })
   @ApiResponse({ status: 200, description: 'Todo 조회 성공' })
-  async getTodosByUser(@UserInfo('user_id') user_id: string) {
-    return this.todosService.findTodosByUser(user_id);
+  async getTodosByUser(@UserInfo('uid') uid: string) {
+    return this.todosService.findTodosByUser(uid);
   }
 
   // 투두 수정
@@ -67,11 +64,11 @@ export class TodosController {
   @ApiResponse({ status: 200, description: 'Todo 수정 성공' })
   @ApiResponse({ status: 404, description: 'Todo를 찾을 수 없음' })
   async update(
-    @UserInfo('user_id') user_id: string,
+    @UserInfo('uid') uid: string,
     @Param('todo_id', ParseIntPipe) todo_id: number,
     @Body() updateTodoDTO: UpdateTodoDTO,
   ) {
-    return this.todosService.update(todo_id, updateTodoDTO, user_id);
+    return this.todosService.update(todo_id, updateTodoDTO, uid);
   }
 
   // 투두 삭제
@@ -81,9 +78,9 @@ export class TodosController {
   @ApiResponse({ status: 200, description: 'Todo 삭제 성공' })
   @ApiResponse({ status: 404, description: '삭제할 Todo가 존재하지 않습니다.' })
   async delete(
-    @UserInfo('user_id') user_id: string,
+    @UserInfo('uid') uid: string,
     @Param('todo_id', ParseIntPipe) todo_id: number,
   ) {
-    return this.todosService.delete(todo_id, user_id);
+    return this.todosService.delete(todo_id, uid);
   }
 }

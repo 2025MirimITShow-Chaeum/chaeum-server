@@ -21,6 +21,11 @@ export class AuthController {
     return this.authService.register(uid, dto);
   }
 
+  @Post('test-login')
+  async login(@Body('email') email: string) {
+    return this.authService.loginWithEmail(email);
+  }
+
   @Post('login')
   @ApiOperation({
     summary: '소셜 로그인',

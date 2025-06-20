@@ -51,6 +51,13 @@ export class AuthService {
     };
   }
 
+  async loginWithEmail(email: string) {
+    const user = await this.userService.findByEmail(email);
+    const payload = { sub: user.uid, uid: user.uid };
+    const accessToken = this.jwtService.sign(payload);
+    return { accessToken, user };
+  }
+
   async register(uid: string, dto: RegisterDto) {
     const user = await this.userService.findUserByUid(uid);
     if (!user) {

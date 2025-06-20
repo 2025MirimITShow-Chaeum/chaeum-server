@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TimerLog } from './entities/timer-log.entity';
 import { Repository } from 'typeorm';
-import { GroupsService } from 'src/groups/groups.service';
-import { UserService } from 'src/user/user.service';
-import { SubjectTimer } from 'src/subject-timers/entities/subject-timer.entity';
+import { GroupsService } from '../groups/groups.service';
+import { UserService } from '../user/user.service';
+import { SubjectTimer } from '../subject-timers/entities/subject-timer.entity';
 
 @Injectable()
 export class TimerLogService {

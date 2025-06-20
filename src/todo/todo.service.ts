@@ -9,7 +9,7 @@ import {
   NotFoundException,
   ForbiddenException,
 } from '@nestjs/common';
-import { Todo } from 'src/todo/entities/todo.entity';
+import { Todo } from '../todo/entities/todo.entity';
 import { CreateTodoDTO } from './dto/create-todo.dto';
 
 @Injectable()
@@ -23,8 +23,8 @@ export class TodosService {
   ) {}
 
   // 투두 생성
-  async create(createTodoDTO: CreateTodoDTO) {
-    const { user_id, group_id } = createTodoDTO;
+  async create(user_id: string, createTodoDTO: CreateTodoDTO) {
+    const { group_id } = createTodoDTO;
 
     const membership = await this.groupMembersRepository.findOne({
       where: { group_id, user_id },
@@ -37,6 +37,8 @@ export class TodosService {
     try {
       const todo = this.todosRepository.create({
         ...createTodoDTO,
+        user_id,
+        user: membership,
         user_color: membership.color,
       });
       await this.todosRepository.save(todo);

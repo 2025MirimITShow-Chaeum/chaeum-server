@@ -8,7 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { GroupMembers, GroupRole } from '../entities/group-members.entity';
 import { Groups } from '../entities/group.entity';
 import { JoinGroupDto } from '../dto/join-group.dto';
-import { ColorService } from 'src/color/color.service';
+import { ColorService } from '../../color/color.service';
 import { v4 as uuidv4 } from 'uuid';
 import { Injectable } from '@nestjs/common';
 

@@ -15,9 +15,9 @@ import {
 } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { UserInfo } from '../auth/decorators/user-info.decorator';
-import { JwtAuthGuard } from 'src/config/jwt.config';
+import { JwtAuthGuard } from '../config/jwt.config';
 import { UpdateUserInfoDto } from './dto/update-user.dto';
-import { FirebaseService } from 'src/firebase/firebase.service';
+import { FirebaseService } from '../firebase/firebase.service';
 
 @UseGuards(JwtAuthGuard)
 @ApiTags('Users API')

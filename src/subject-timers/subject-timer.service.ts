@@ -1,11 +1,11 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { SubjectTimer } from './entities/subject-timer.entity';
-import { getAdjustedDate } from 'src/util/date-utils';
+import { getAdjustedDate } from '../util/date-utils';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { GroupsService } from 'src/groups/groups.service';
-import { UserService } from 'src/user/user.service';
-import { TimerLogService } from 'src/timer-logs/timer-log.service';
+import { GroupsService } from '../groups/groups.service';
+import { UserService } from '../user/user.service';
+import { TimerLogService } from '../timer-logs/timer-log.service';
 
 @Injectable()
 export class SubjectTimerService {

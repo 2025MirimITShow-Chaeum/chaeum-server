@@ -1,4 +1,4 @@
-import { User } from 'src/user/entities/user.entity';
+import { User } from '../../user/entities/user.entity';
 import { Groups } from '../../groups/entities/group.entity';
 import {
   Entity,

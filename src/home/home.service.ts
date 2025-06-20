@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { GroupsService } from 'src/groups/groups.service';
-import { SubjectTimerService } from 'src/subject-timers/subject-timer.service';
-import { TodosService } from 'src/todo/todo.service';
+import { GroupsService } from '../groups/groups.service';
+import { SubjectTimerService } from '../subject-timers/subject-timer.service';
+import { TodosService } from '../todo/todo.service';
 
 @Injectable()
 export class HomeService {

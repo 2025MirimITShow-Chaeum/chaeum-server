@@ -10,7 +10,7 @@ import { Repository } from 'typeorm';
 import { Dday } from './entities/dday.entity';
 import { CreateDdayDTO } from './dto/create-dday.dto';
 import { UpdateDdayDTO } from './dto/update-dday.dto';
-import { User } from 'src/user/entities/user.entity';
+import { User } from '../user/entities/user.entity';
 
 @Injectable()
 export class DdayService {
@@ -30,7 +30,7 @@ export class DdayService {
     }
 
     try {
-      const dday = this.ddayRepository.create(createDdayDTO);
+      const dday = this.ddayRepository.create({ ...createDdayDTO, user_id });
       await this.ddayRepository.save(dday);
 
       return {

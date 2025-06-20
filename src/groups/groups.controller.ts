@@ -19,7 +19,7 @@ import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { GroupQueryService } from './services/group-query.service';
 import { GroupAttendanceService } from './services/group-attendance.service';
 import { AuthGuard } from '@nestjs/passport';
-import { UserInfo } from 'src/auth/decorators/user-info.decorator';
+import { UserInfo } from '../auth/decorators/user-info.decorator';
 import { Groups } from './entities/group.entity';
 
 @UseGuards(AuthGuard('jwt'))

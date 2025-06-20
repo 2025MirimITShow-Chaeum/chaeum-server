@@ -2,9 +2,9 @@ import { IsNotEmpty, IsString, IsBoolean } from 'class-validator';
 
 export class CreateTodoDTO {
   // user 테이블에서 가져온 user_id
-  @IsString()
-  @IsNotEmpty()
-  user_id: string;
+  // @IsString()
+  // @IsNotEmpty()
+  // user_id: string;
 
   // group 테이블에서 가져온 group_id
   @IsString()

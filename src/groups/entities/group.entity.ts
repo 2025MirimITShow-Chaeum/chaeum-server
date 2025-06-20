@@ -1,6 +1,6 @@
-import { SubjectTimer } from 'src/subject-timers/entities/subject-timer.entity';
-import { TimerLog } from 'src/timer-logs/entities/timer-log.entity';
-import { Todo } from 'src/todo/entities/todo.entity';
+import { SubjectTimer } from '../../subject-timers/entities/subject-timer.entity';
+import { TimerLog } from '../../timer-logs/entities/timer-log.entity';
+import { Todo } from '../../todo/entities/todo.entity';
 import { GroupAttendanceLog } from '../entities/group_attendance_log.entity';
 import {
   Entity,

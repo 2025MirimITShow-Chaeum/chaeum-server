@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { Todo } from '../todo/entities/todo.entity';
 import { CreateTodoDTO } from './dto/create-todo.dto';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class TodosService {
@@ -20,15 +21,20 @@ export class TodosService {
 
     @InjectRepository(GroupMembers)
     private groupMembersRepository: Repository<GroupMembers>,
+
+    private readonly userServie: UserService,
   ) {}
 
   // 투두 생성
   async create(user_id: string, createTodoDTO: CreateTodoDTO) {
-    const { group_id } = createTodoDTO;
+    const group_id = createTodoDTO.group_id;
+    console.log('groupId : ', group_id);
 
+    const user = await this.userServie.findUserByUid(user_id);
     const membership = await this.groupMembersRepository.findOne({
       where: { group_id, user_id },
     });
+    console.log('user: ', membership);
 
     if (!membership) {
       throw new ForbiddenException('해당 그룹의 멤버가 아닙니다.');
@@ -38,9 +44,10 @@ export class TodosService {
       const todo = this.todosRepository.create({
         ...createTodoDTO,
         user_id,
-        user: membership,
+        user,
         user_color: membership.color,
       });
+      console.log('todo: ', todo);
       await this.todosRepository.save(todo);
 
       return {
@@ -50,6 +57,9 @@ export class TodosService {
       };
     } catch (err) {
       console.error(err);
+      if (err instanceof ForbiddenException) {
+        throw err;
+      }
       throw new InternalServerErrorException(
         'Todo를 생성하는데 실패하였습니다.',
       );

@@ -21,18 +21,14 @@ export class Todo {
   user_id: string;
 
   // 연결된 User 객체
-  @ManyToOne(() => User)
-  @JoinColumn({ name: 'user_id' })
+  @ManyToOne(() => User, (user) => user.todos)
   user: User;
 
   @Column()
-  @Index()
   group_id: string;
 
   @ManyToOne(() => Groups, (group) => group.todos)
-  @JoinColumn({ name: 'group_id' })
   group: Groups;
-  
 
   @Column({ name: 'title', length: 50, nullable: false })
   title: string;
